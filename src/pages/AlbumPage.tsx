@@ -2,19 +2,47 @@ import { useMusicStore } from "@/stores/useMusicStore";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ClockIcon, DotIcon, PlayIcon } from "lucide-react";
+import {
+  ClockIcon,
+  DotIcon,
+  Music4Icon,
+  PlayIcon,
+  PauseIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/lib/utils";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 const AlbumPage = () => {
   const { id } = useParams();
   const { album, fetchAlbumById, isLoading } = useMusicStore();
+
+  const { currentSong, isPlaying, playAlbum, togglePlay } = usePlayerStore();
+
+  const isAlbumPlaying = album?.songs.some(
+    (song) => song._id === currentSong?._id
+  );
 
   useEffect(() => {
     if (id) fetchAlbumById(id);
   }, [fetchAlbumById, id]);
 
   if (isLoading) return null;
+
+  const handlePlaySong = (index: number) => {
+    if (!album) return;
+    playAlbum(album.songs, index);
+  };
+
+  const handlePlayAlbum = () => {
+    if (!album) return;
+
+    if (isAlbumPlaying) {
+      togglePlay();
+    } else {
+      playAlbum(album.songs, 0);
+    }
+  };
 
   return (
     <div className="h-full">
@@ -54,10 +82,15 @@ const AlbumPage = () => {
             {/* Play Button */}
             <div className="px-6 pb-4 flex items-center gap-6">
               <Button
+                onClick={handlePlayAlbum}
                 size="icon"
                 className="size-14 rounded-full bg-green-500 hover:bg-green-400 hover:scale-105 transition-all"
               >
-                <PlayIcon className="h-7 w-7 text-black" />
+                {isPlaying && isAlbumPlaying ? (
+                  <PauseIcon className="h-7 w-7 text-black" />
+                ) : (
+                  <PlayIcon className="h-7 w-7 text-black" />
+                )}
               </Button>
             </div>
 
@@ -77,39 +110,52 @@ const AlbumPage = () => {
 
               <div className="px-6">
                 <div className="space-y-2 py-4">
-                  {album?.songs.map((song, index) => (
-                    <div
-                      key={song._id}
-                      className="grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-4 py-2 text-sm 
+                  {album?.songs.map((song, index) => {
+                    const isCurrentSong = currentSong?._id === song._id;
+
+                    return (
+                      <div
+                        onClick={() => handlePlaySong(index)}
+                        key={song._id}
+                        className="grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-4 py-2 text-sm 
                       text-zinc-400 hover:bg-white/5 rounded-md group cursor-pointer"
-                    >
-                      <div className="flex items-center justify-center">
-                        <span className="group-hover:hidden">{index + 1}</span>
-                        <PlayIcon className="h-4 w-4 hidden group-hover:block" />
-                      </div>
+                      >
+                        <div className="flex items-center justify-center">
+                          {isCurrentSong && isPlaying ? (
+                            <Music4Icon className="size-4 text-green-500" />
+                          ) : (
+                            <span className="group-hover:hidden">
+                              {index + 1}
+                            </span>
+                          )}
+                          {!isCurrentSong && (
+                            <PlayIcon className="h-4 w-4 hidden group-hover:block" />
+                          )}
+                        </div>
 
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={song.imageUrl}
-                          alt={song.title}
-                          className="size-10"
-                        />
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={song.imageUrl}
+                            alt={song.title}
+                            className="size-10"
+                          />
 
-                        <div>
-                          <div className="font-medium text-white">
-                            {song.title}
+                          <div>
+                            <div className="font-medium text-white">
+                              {song.title}
+                            </div>
+                            <div>{song.artist}</div>
                           </div>
-                          <div>{song.artist}</div>
+                        </div>
+                        <div className="flex items-center">
+                          {song.createdAt.split("T")[0]}
+                        </div>
+                        <div className="flex items-center">
+                          {formatDuration(song.duration)}
                         </div>
                       </div>
-                      <div className="flex items-center">
-                        {song.createdAt.split("T")[0]}
-                      </div>
-                      <div className="flex items-center">
-                        {formatDuration(song.duration)}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
