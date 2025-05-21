@@ -1,65 +1,37 @@
 import { Link } from "react-router-dom";
-import { HomeIcon, LibraryIcon, MessageCircleIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "../ui/button";
-import { SignedIn } from "@clerk/clerk-react";
+import { LibraryIcon, MessageCircleIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import PlaylistSkeleton from "@/components/skeletons/PlaylistSkeleton";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { useEffect } from "react";
+import SibebarLink from "@/components/link/SibebarLink";
+import HomeIcon from "@/components/icons/HomeIcon";
 
 const LeftSidebar = () => {
-  const { albums, isLoading, fetchAlbums } = useMusicStore();
+  // const { albums, isLoading, fetchAlbums } = useMusicStore();
 
-  useEffect(() => {
-    fetchAlbums();
-  }, [fetchAlbums]);
+  // useEffect(() => {
+  //   fetchAlbums();
+  // }, [fetchAlbums]);
 
   return (
     <div className="h-full flex flex-col gap-2">
-      {/* Navigation Menu */}
-      <div className="rounded-lg bg-zinc-900 p-4">
-        <div className="space-y-2">
-          <Link
-            to="/"
-            className={cn(
-              buttonVariants({
-                variant: "ghost",
-                className: "w-full justify-start text-white hover:bg-zinc-800",
-              })
-            )}
-          >
-            <HomeIcon className="size-5" />
-            <span className="hidden md:inline">Home</span>
-          </Link>
-
-          <SignedIn>
-            <Link
-              to="/chat"
-              className={cn(
-                buttonVariants({
-                  variant: "ghost",
-                  className:
-                    "w-full justify-start text-white hover:bg-zinc-800",
-                })
-              )}
-            >
-              <MessageCircleIcon className="size-5" />
-              <span className="hidden md:inline">Messages</span>
-            </Link>
-          </SignedIn>
-        </div>
-      </div>
       {/* Library Section */}
-      <div className="flex-1 rounded-lg bg-zinc-900 p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center text-white px-2 gap-2">
-            <LibraryIcon className="size-5" />
-            <span className="hidden md:inline">Playlists</span>
-          </div>
-        </div>
+      <div className="flex-1 rounded-lg bg-zinc-900 px-3 py-2">
+        <SibebarLink to="/" label="Home" icon={<HomeIcon />} />
+        <SibebarLink
+          to="/"
+          label="Message"
+          icon={<MessageCircleIcon className="size-5" />}
+        />
+        <SibebarLink
+          to="/"
+          label="Library"
+          icon={<LibraryIcon className="size-5" />}
+        />
+
         <ScrollArea className="h-[calc(100vh-300px)]">
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             {isLoading ? (
               <PlaylistSkeleton />
             ) : (
@@ -83,7 +55,7 @@ const LeftSidebar = () => {
                 </Link>
               ))
             )}
-          </div>
+          </div> */}
         </ScrollArea>
       </div>
     </div>

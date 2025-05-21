@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-// import { axiosInstance } from "./lib/axios";
 // pages
 import HomePage from "@/pages/home/HomePage";
 import AuthCallbackPage from "@/pages/auth-callback/AuthCallbackPage";

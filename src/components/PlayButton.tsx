@@ -1,17 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Song } from "@/types";
+import { Track } from "@/types";
 import { PauseIcon, PlayIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
-const PlayButton = ({ song }: { song: Song }) => {
+const PlayButton = ({ track }: { track: Track }) => {
   const { currentSong, isPlaying, setCurrentSong, togglePlay } =
     usePlayerStore();
-  const isCurrentSong = currentSong?._id === song._id;
+  const isCurrentSong = currentSong?._id === track._id;
 
   const handlePlay = () => {
     if (isCurrentSong) togglePlay();
-    else setCurrentSong(song);
+    else setCurrentSong(track);
   };
 
   return (

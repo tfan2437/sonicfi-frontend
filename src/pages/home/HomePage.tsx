@@ -5,34 +5,50 @@ import { useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SectionGrid from "@/components/SectionGrid";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useSuggestStore } from "@/stores/useSuggestionsStore";
+
 const HomePage = () => {
-  const {
-    isLoading,
-    madeForYouSongs,
-    trendingSongs,
-    featuredSongs,
-    fetchMadeForYouSongs,
-    fetchTrendingSongs,
-    fetchFeaturedSongs,
-  } = useMusicStore();
+  // const {
+  //   isLoading,
+  //   madeForYouSongs,
+  //   trendingSongs,
+  //   featuredSongs,
+  //   fetchMadeForYouSongs,
+  //   fetchTrendingSongs,
+  //   fetchFeaturedSongs,
+  // } = useMusicStore();
 
-  const { initializeQueue } = usePlayerStore();
+  // const { initializeQueue } = usePlayerStore();
+
+  // useEffect(() => {
+  //   fetchMadeForYouSongs();
+  //   fetchTrendingSongs();
+  //   fetchFeaturedSongs();
+  // }, [fetchMadeForYouSongs, fetchTrendingSongs, fetchFeaturedSongs]);
+
+  // useEffect(() => {
+  //   if (
+  //     madeForYouSongs.length > 0 &&
+  //     trendingSongs.length > 0 &&
+  //     featuredSongs.length > 0
+  //   ) {
+  //     initializeQueue([...madeForYouSongs, ...trendingSongs, ...featuredSongs]);
+  //   }
+  // }, [madeForYouSongs, trendingSongs, featuredSongs, initializeQueue]);
+
+  const { isLoading, newReleaseAlbums, newReleaseTracks, fetchNewReleases } =
+    useSuggestStore();
 
   useEffect(() => {
-    fetchMadeForYouSongs();
-    fetchTrendingSongs();
-    fetchFeaturedSongs();
-  }, [fetchMadeForYouSongs, fetchTrendingSongs, fetchFeaturedSongs]);
+    fetchNewReleases();
+  }, [fetchNewReleases]);
 
   useEffect(() => {
-    if (
-      madeForYouSongs.length > 0 &&
-      trendingSongs.length > 0 &&
-      featuredSongs.length > 0
-    ) {
-      initializeQueue([...madeForYouSongs, ...trendingSongs, ...featuredSongs]);
+    if (newReleaseAlbums && newReleaseTracks) {
+      console.log("ALBUMS: ", newReleaseAlbums);
+      console.log("TRACKS: ", newReleaseTracks);
     }
-  }, [madeForYouSongs, trendingSongs, featuredSongs, initializeQueue]);
+  }, [newReleaseAlbums, newReleaseTracks]);
 
   return (
     <main className="rounded overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900">
@@ -45,15 +61,15 @@ const HomePage = () => {
           <FeatureSection />
           <div className="space-y-8">
             <SectionGrid
-              title="Made for you"
-              songs={madeForYouSongs}
+              title="New Releases"
+              tracks={newReleaseTracks}
               isLoading={isLoading}
             />
-            <SectionGrid
+            {/* <SectionGrid
               title="Trending"
               songs={trendingSongs}
               isLoading={isLoading}
-            />
+            /> */}
           </div>
         </div>
       </ScrollArea>

@@ -7,9 +7,9 @@ import { Outlet } from "react-router-dom";
 import LeftSidebar from "@/components/layout/LeftSidebar";
 import FriendsActivity from "@/components/layout/FriendsActivity";
 import AudioPlayer from "@/components/layout/AudioPlayer";
-import PlaybackControls from "@/components/layout/PlaybackControls";
+import TrackControl from "@/components/layout/TrackControl";
 import { useEffect, useState } from "react";
-
+import Navbar from "@/components/layout/Navbar";
 const MainLayout = () => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -25,11 +25,11 @@ const MainLayout = () => {
 
   return (
     <div className="h-screen bg-black text-white flex flex-col">
+      <Navbar />
       <ResizablePanelGroup
         direction="horizontal"
         className="flex-1 flex h-full overflow-hidden p-2"
       >
-        <AudioPlayer />
         {/* Left Sidebar */}
         <ResizablePanel
           defaultSize={20}
@@ -58,7 +58,8 @@ const MainLayout = () => {
           </>
         )}
       </ResizablePanelGroup>
-      <PlaybackControls />
+      <TrackControl />
+      <AudioPlayer />
     </div>
   );
 };

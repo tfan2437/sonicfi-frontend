@@ -1,14 +1,14 @@
-import { Song } from "@/types";
+import { Track } from "@/types";
 import { Button } from "@/components/ui/button";
 import SectionGridSkeleton from "@/components/skeletons/SectionGridSkeleton";
 import PlayButton from "@/components/PlayButton";
 interface SectionGridProps {
   title: string;
-  songs: Song[];
+  tracks: Track[];
   isLoading: boolean;
 }
 
-const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
+const SectionGrid = ({ tracks, title, isLoading }: SectionGridProps) => {
   if (isLoading) return <SectionGridSkeleton />;
 
   return (
@@ -24,24 +24,26 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {songs.map((song) => (
+        {tracks.map((track) => (
           <div
-            key={song._id}
+            key={track._id}
             className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40 transition-all group cursor-pointer"
           >
             <div className="relative mb-4">
               <div className="aspect-square rounded-md shadow-lg overflow-hidden">
                 <img
-                  src={song.imageUrl}
-                  alt={song.title}
+                  src={track.image.url}
+                  alt={track.name}
                   className="w-full h-full object-cover transition-transform duration-300 
 									group-hover:scale-105"
                 />
               </div>
-              <PlayButton song={song} />
+              {/* <PlayButton track={track} /> */}
             </div>
-            <h3 className="font-medium mb-2 truncate">{song.title}</h3>
-            <p className="text-sm text-zinc-400 truncate">{song.artist}</p>
+            <h3 className="font-medium mb-2 truncate">{track.name}</h3>
+            <p className="text-sm text-zinc-400 truncate">
+              {track.artists.map((artist) => artist.name).join(", ")}
+            </p>
           </div>
         ))}
       </div>
