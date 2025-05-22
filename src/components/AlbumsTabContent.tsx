@@ -1,17 +1,11 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Library } from "lucide-react";
 import AlbumsTable from "@/components/AlbumTable";
 import AddAlbumDialog from "@/components/AddAlbumDialog";
 
 const AlbumsTabContent = () => {
   return (
-    <Card className="bg-zinc-800/50 border-zinc-700/50">
+    <Card className="border-zinc-700/50 bg-zinc-800/50">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>

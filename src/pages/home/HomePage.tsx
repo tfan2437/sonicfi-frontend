@@ -1,11 +1,10 @@
-import Topbar from "@/components/Topbar";
 import FeatureSection from "@/components/FeatureSection";
-import { useMusicStore } from "@/stores/useMusicStore";
 import { useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import SectionGrid from "@/components/SectionGrid";
-import { usePlayerStore } from "@/stores/usePlayerStore";
+import TracksSection from "@/components/section/TracksSection";
 import { useSuggestStore } from "@/stores/useSuggestionsStore";
+import AlbumsSection from "@/components/section/AlbumsSection";
+import ArtistsSection from "@/components/section/ArtistsSection";
 
 const HomePage = () => {
   // const {
@@ -36,12 +35,20 @@ const HomePage = () => {
   //   }
   // }, [madeForYouSongs, trendingSongs, featuredSongs, initializeQueue]);
 
-  const { isLoading, newReleaseAlbums, newReleaseTracks, fetchNewReleases } =
-    useSuggestStore();
+  const {
+    isLoading,
+    newReleaseAlbums,
+    newReleaseTracks,
+    topArtists,
+    moreLikeArtist,
+    fetchNewReleases,
+    fetchTopAndMoreLike,
+  } = useSuggestStore();
 
   useEffect(() => {
     fetchNewReleases();
-  }, [fetchNewReleases]);
+    fetchTopAndMoreLike();
+  }, [fetchNewReleases, fetchTopAndMoreLike]);
 
   useEffect(() => {
     if (newReleaseAlbums && newReleaseTracks) {
@@ -51,26 +58,14 @@ const HomePage = () => {
   }, [newReleaseAlbums, newReleaseTracks]);
 
   return (
-    <main className="rounded overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900">
-      <Topbar />
-      <ScrollArea className="h-[calc(100vh-180px)]">
-        <div className="p-4 sm:p-6">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-6">
-            Good afternoon
-          </h1>
-          <FeatureSection />
-          <div className="space-y-8">
-            <SectionGrid
-              title="New Releases"
-              tracks={newReleaseTracks}
-              isLoading={isLoading}
-            />
-            {/* <SectionGrid
-              title="Trending"
-              songs={trendingSongs}
-              isLoading={isLoading}
-            /> */}
-          </div>
+    <main className="h-full overflow-hidden rounded bg-zinc-900">
+      {/* <Topbar /> */}
+      <ScrollArea className="h-full">
+        <FeatureSection />
+        <div className="space-y-8">
+          <ArtistsSection title="Top Artists" artists={topArtists} isLoading={isLoading} />
+          <AlbumsSection title="New Releases" albums={newReleaseAlbums} isLoading={isLoading} />
+          <TracksSection title="New Releases" tracks={newReleaseTracks} isLoading={isLoading} />
         </div>
       </ScrollArea>
     </main>

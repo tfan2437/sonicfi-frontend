@@ -81,17 +81,15 @@ const AddAlbumDialog = () => {
   return (
     <Dialog open={albumDialogOpen} onOpenChange={setAlbumDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-violet-500 hover:bg-violet-600 text-white">
+        <Button className="bg-violet-500 text-white hover:bg-violet-600">
           <Plus className="mr-2 h-4 w-4" />
           Add Album
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-zinc-900 border-zinc-700">
+      <DialogContent className="border-zinc-700 bg-zinc-900">
         <DialogHeader>
           <DialogTitle>Add New Album</DialogTitle>
-          <DialogDescription>
-            Add a new album to your collection
-          </DialogDescription>
+          <DialogDescription>Add a new album to your collection</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <input
@@ -102,14 +100,14 @@ const AddAlbumDialog = () => {
             className="hidden"
           />
           <div
-            className="flex items-center justify-center p-6 border-2 border-dashed border-zinc-700 rounded-lg cursor-pointer"
+            className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 p-6"
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="text-center">
-              <div className="p-3 bg-zinc-800 rounded-full inline-block mb-2">
+              <div className="mb-2 inline-block rounded-full bg-zinc-800 p-3">
                 <Upload className="h-6 w-6 text-zinc-400" />
               </div>
-              <div className="text-sm text-zinc-400 mb-2">
+              <div className="mb-2 text-sm text-zinc-400">
                 {imageFile ? imageFile.name : "Upload album artwork"}
               </div>
               <Button variant="outline" size="sm" className="text-xs">
@@ -121,10 +119,8 @@ const AddAlbumDialog = () => {
             <label className="text-sm font-medium">Album Title</label>
             <Input
               value={newAlbum.title}
-              onChange={(e) =>
-                setNewAlbum({ ...newAlbum, title: e.target.value })
-              }
-              className="bg-zinc-800 border-zinc-700"
+              onChange={(e) => setNewAlbum({ ...newAlbum, title: e.target.value })}
+              className="border-zinc-700 bg-zinc-800"
               placeholder="Enter album title"
             />
           </div>
@@ -132,10 +128,8 @@ const AddAlbumDialog = () => {
             <label className="text-sm font-medium">Artist</label>
             <Input
               value={newAlbum.artist}
-              onChange={(e) =>
-                setNewAlbum({ ...newAlbum, artist: e.target.value })
-              }
-              className="bg-zinc-800 border-zinc-700"
+              onChange={(e) => setNewAlbum({ ...newAlbum, artist: e.target.value })}
+              className="border-zinc-700 bg-zinc-800"
               placeholder="Enter artist name"
             />
           </div>
@@ -150,7 +144,7 @@ const AddAlbumDialog = () => {
                   releaseYear: parseInt(e.target.value),
                 })
               }
-              className="bg-zinc-800 border-zinc-700"
+              className="border-zinc-700 bg-zinc-800"
               placeholder="Enter release year"
               min={1900}
               max={new Date().getFullYear()}
@@ -158,19 +152,13 @@ const AddAlbumDialog = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setAlbumDialogOpen(false)}
-            disabled={isLoading}
-          >
+          <Button variant="outline" onClick={() => setAlbumDialogOpen(false)} disabled={isLoading}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             className="bg-violet-500 hover:bg-violet-600"
-            disabled={
-              isLoading || !imageFile || !newAlbum.title || !newAlbum.artist
-            }
+            disabled={isLoading || !imageFile || !newAlbum.title || !newAlbum.artist}
           >
             {isLoading ? "Creating..." : "Add Album"}
           </Button>

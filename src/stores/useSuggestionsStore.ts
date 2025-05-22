@@ -20,9 +20,7 @@ interface SuggestStore {
   error: string | null;
 
   fetchNewReleases: () => Promise<void>;
-
-  // fetchTopArtists: () => Promise<void>;
-  // fetchMoreLikeArtist: (id: string) => Promise<void>;
+  fetchTopAndMoreLike: () => Promise<void>;
 }
 
 export const useSuggestStore = create<SuggestStore>((set) => ({
@@ -50,10 +48,22 @@ export const useSuggestStore = create<SuggestStore>((set) => ({
       set({ newReleaseAlbums, newReleaseTracks });
     } catch (error) {
       set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
+        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
+      });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchTopAndMoreLike: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axiosInstance.get(`/suggestions/top-and-more-like-artists`);
+      const { topArtists, moreLikeArtist } = response.data;
+      set({ topArtists, moreLikeArtist });
+    } catch (error) {
+      set({
+        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
       });
     } finally {
       set({ isLoading: false });

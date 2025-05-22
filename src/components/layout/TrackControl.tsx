@@ -6,7 +6,7 @@ import VolumeControl from "@/components/playback/VolumeControl";
 
 const TrackControl = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { currentSong } = usePlayerStore();
+  const { currentTrack } = usePlayerStore();
 
   const [volume, setVolume] = useState<number>(75);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -41,22 +41,14 @@ const TrackControl = () => {
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [currentSong]);
+  }, [currentTrack]);
 
   return (
-    <div className="h-20 bg-black border-t border-zinc-800 px-3 w-full">
-      <div className="flex items-center h-full w-full">
-        <TrackInfo currentSong={currentSong} />
-        <PlaybackControl
-          currentTime={currentTime}
-          duration={duration}
-          handleSeek={handleSeek}
-        />
-        <VolumeControl
-          volume={volume}
-          setVolume={setVolume}
-          audioRef={audioRef}
-        />
+    <div className="h-20 w-full border-t border-zinc-800 bg-black px-3">
+      <div className="flex h-full w-full items-center">
+        <TrackInfo track={currentTrack} />
+        <PlaybackControl currentTime={currentTime} duration={duration} handleSeek={handleSeek} />
+        <VolumeControl volume={volume} setVolume={setVolume} audioRef={audioRef} />
       </div>
     </div>
   );

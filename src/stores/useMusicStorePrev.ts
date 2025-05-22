@@ -54,10 +54,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ albums: response.data });
     } catch (error) {
       set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
+        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
       });
     } finally {
       set({ isLoading: false });
@@ -71,10 +68,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ album: response.data });
     } catch (error) {
       set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
+        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
       });
     } finally {
       set({ isLoading: false });
@@ -158,7 +152,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
         songs: state.songs.map((song) =>
           song.albumId === state.albums.find((a) => a._id === id)?.title
             ? { ...song, album: null }
-            : song
+            : song,
         ),
       }));
       toast.success("Album deleted successfully");

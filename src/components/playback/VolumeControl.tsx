@@ -1,10 +1,5 @@
 import { Slider } from "@/components/ui/slider";
-import {
-  Laptop2Icon,
-  Volume1Icon,
-  AlignJustifyIcon,
-  HandMetalIcon,
-} from "lucide-react";
+import { Laptop2Icon, Volume1Icon, AlignJustifyIcon, HandMetalIcon } from "lucide-react";
 
 import IconButton from "@/components/button/IconButton";
 
@@ -16,25 +11,13 @@ interface VolumeControlProps {
 
 const VolumeControl = ({ audioRef, volume, setVolume }: VolumeControlProps) => {
   return (
-    <div className="flex items-center gap-1 w-1/4 justify-end">
-      <IconButton
-        icon={<HandMetalIcon className="size-4" />}
-        onClick={() => {}}
-      />
-      <IconButton
-        icon={<AlignJustifyIcon className="size-4" />}
-        onClick={() => {}}
-      />
-      <IconButton
-        icon={<Laptop2Icon className="size-4" />}
-        onClick={() => {}}
-      />
+    <div className="flex w-1/4 items-center justify-end gap-1">
+      <IconButton icon={<HandMetalIcon className="size-4" />} onClick={() => {}} />
+      <IconButton icon={<AlignJustifyIcon className="size-4" />} onClick={() => {}} />
+      <IconButton icon={<Laptop2Icon className="size-4" />} onClick={() => {}} />
 
       <div className="flex items-center gap-2">
-        <IconButton
-          icon={<Volume1Icon className="size-4" />}
-          onClick={() => {}}
-        />
+        <IconButton icon={<Volume1Icon className="size-4" />} onClick={() => {}} />
 
         <Slider
           value={[volume]}

@@ -45,11 +45,7 @@ const SongsTable = () => {
         {songs.map((song) => (
           <TableRow key={song._id} className="hover:bg-zinc-800/50">
             <TableCell>
-              <img
-                src={song.imageUrl}
-                alt={song.title}
-                className="size-10 rounded object-cover"
-              />
+              <img src={song.imageUrl} alt={song.title} className="size-10 rounded object-cover" />
             </TableCell>
             <TableCell className="font-medium">{song.title}</TableCell>
             <TableCell>{song.artist}</TableCell>
@@ -61,11 +57,11 @@ const SongsTable = () => {
             </TableCell>
 
             <TableCell className="text-right">
-              <div className="flex gap-2 justify-end">
+              <div className="flex justify-end gap-2">
                 <Button
                   variant={"ghost"}
                   size={"sm"}
-                  className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                  className="text-red-400 hover:bg-red-400/10 hover:text-red-300"
                   onClick={() => deleteSong(song._id)}
                 >
                   <Trash2 className="size-4" />

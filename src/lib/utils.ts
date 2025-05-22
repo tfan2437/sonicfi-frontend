@@ -6,7 +6,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDuration(duration: number) {
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.floor(duration % 60);
+  // give me a ms to mm:ss format
+  const minutes = Math.floor(duration / 60000);
+  const seconds = Math.floor((duration % 60000) / 1000);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }

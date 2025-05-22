@@ -1,34 +1,35 @@
-import { Button } from "@/components/ui/button";
-import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Track } from "@/types";
-import { PauseIcon, PlayIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+import { usePlayerStore } from "@/stores/usePlayerStore";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIcon from "@/components/icons/PlayIcon";
 
-const PlayButton = ({ track }: { track: Track }) => {
-  const { currentSong, isPlaying, setCurrentSong, togglePlay } =
-    usePlayerStore();
-  const isCurrentSong = currentSong?._id === track._id;
-
-  const handlePlay = () => {
-    if (isCurrentSong) togglePlay();
-    else setCurrentSong(track);
-  };
+const PlayButton = ({
+  track,
+  handlePlayTrack,
+}: {
+  track: Track;
+  handlePlayTrack: (track: Track) => void;
+}) => {
+  const { currentTrack, isPlaying } = usePlayerStore();
+  const isCurrentTrack = currentTrack && currentTrack._id === track._id;
 
   return (
-    <Button
-      size={"icon"}
-      onClick={handlePlay}
+    <button
+      onClick={() => handlePlayTrack(track)}
       className={twMerge(
-        "absolute bottom-3 right-2 bg-green-500 hover:bg-green-400 hover:scale-105 transition-all opacity-0 translate-y-2 group-hover:translate-y-0",
-        isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        "absolute right-2 bottom-2 cursor-pointer rounded-full bg-black/50 p-2 text-white backdrop-blur-xs transition-all duration-200 hover:scale-105",
+        isCurrentTrack && isPlaying ? "block" : "hidden group-hover:block",
       )}
     >
-      {isCurrentSong && isPlaying ? (
-        <PauseIcon className="size-5 text-black" />
+      {isCurrentTrack && isPlaying ? (
+        <div className="flex size-7 items-center justify-center">
+          <PauseIcon className="size-6" />
+        </div>
       ) : (
-        <PlayIcon className="size-5 text-black" />
+        <PlayIcon className="size-7" />
       )}
-    </Button>
+    </button>
   );
 };
 export default PlayButton;

@@ -14,13 +14,8 @@ interface PlaybackControlProps {
   handleSeek: (value: number[]) => void;
 }
 
-const PlaybackControl = ({
-  currentTime,
-  duration,
-  handleSeek,
-}: PlaybackControlProps) => {
-  const { currentSong, isPlaying, togglePlay, playNext, playPrevious } =
-    usePlayerStore();
+const PlaybackControl = ({ currentTime, duration, handleSeek }: PlaybackControlProps) => {
+  const { currentTrack, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -29,40 +24,33 @@ const PlaybackControl = ({
   };
 
   return (
-    <div className="flex flex-col items-center gap-2 flex-1">
+    <div className="flex flex-1 flex-col items-center gap-2">
       <div className="flex items-center gap-5">
-        <IconButton
-          icon={<ShuffleIcon className="size-4" />}
-          onClick={() => {}}
-        />
+        <IconButton icon={<ShuffleIcon className="size-4" />} onClick={() => {}} />
         <IconButton
           icon={<PrevIcon className="size-6" />}
           onClick={playPrevious}
-          disabled={!currentSong}
+          disabled={!currentTrack}
         />
         <button
-          className="bg-white hover:bg-white/80 text-black rounded-full h-8 w-8 flex items-center justify-center cursor-pointer outline-none"
+          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white text-black outline-none hover:bg-white/80"
           onClick={togglePlay}
-          disabled={!currentSong}
+          disabled={!currentTrack}
         >
-          {isPlaying ? (
-            <PauseIcon className="size-6" />
-          ) : (
-            <PlayIcon className="size-7 pr-px" />
-          )}
+          {isPlaying ? <PauseIcon className="size-6" /> : <PlayIcon className="size-7 pr-px" />}
         </button>
         <IconButton
           icon={<NextIcon className="size-6" />}
           onClick={playNext}
-          disabled={!currentSong}
+          disabled={!currentTrack}
         />
         <IconButton
           icon={<RepeatIcon className="size-4" />}
           onClick={playNext}
-          disabled={!currentSong}
+          disabled={!currentTrack}
         />
       </div>
-      <div className="hidden sm:flex items-center gap-2 w-full">
+      <div className="hidden w-full items-center gap-2 sm:flex">
         <div className="text-xs text-zinc-400">{formatTime(currentTime)}</div>
         <Slider
           value={[currentTime]}

@@ -15,20 +15,12 @@ const LeftSidebar = () => {
   // }, [fetchAlbums]);
 
   return (
-    <div className="h-full flex flex-col gap-2">
+    <div className="flex h-full flex-col gap-2">
       {/* Library Section */}
       <div className="flex-1 rounded-lg bg-zinc-900 px-3 py-2">
         <SibebarLink to="/" label="Home" icon={<HomeIcon />} />
-        <SibebarLink
-          to="/"
-          label="Message"
-          icon={<MessageCircleIcon className="size-5" />}
-        />
-        <SibebarLink
-          to="/"
-          label="Library"
-          icon={<LibraryIcon className="size-5" />}
-        />
+        <SibebarLink to="/" label="Message" icon={<MessageCircleIcon className="size-5" />} />
+        <SibebarLink to="/" label="Library" icon={<LibraryIcon className="size-5" />} />
 
         <ScrollArea className="h-[calc(100vh-300px)]">
           {/* <div className="space-y-2">

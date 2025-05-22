@@ -8,9 +8,9 @@ interface SibebarLinkProps {
 
 const SibebarLink = ({ to, label = "", icon }: SibebarLinkProps) => {
   return (
-    <Link to={to} className="w-full h-20">
-      <div className="flex items-center gap-2 text-white font-medium rounded-md hover:bg-zinc-800 justify-start py-2 px-2">
-        <div className="size-6 flex items-center justify-center">{icon}</div>
+    <Link to={to} className="h-20 w-full">
+      <div className="flex items-center justify-start gap-2 rounded-md px-2 py-2 font-medium text-white hover:bg-zinc-800">
+        <div className="flex size-6 items-center justify-center">{icon}</div>
         {label && <span className="hidden md:inline">{label}</span>}
       </div>
     </Link>

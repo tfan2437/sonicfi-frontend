@@ -74,8 +74,7 @@ const AddSongDialog = () => {
 
       //   console.log(formData);
 
-      const albumId =
-        newSong.album && newSong.album !== "none" ? newSong.album : "";
+      const albumId = newSong.album && newSong.album !== "none" ? newSong.album : "";
 
       const temp = {
         title: newSong.title,
@@ -115,18 +114,16 @@ const AddSongDialog = () => {
   return (
     <Dialog open={songDialogOpen} onOpenChange={setSongDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-emerald-500 hover:bg-emerald-600 text-black">
+        <Button className="bg-emerald-500 text-black hover:bg-emerald-600">
           <Plus className="mr-2 h-4 w-4" />
           Add Song
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="bg-zinc-900 border-zinc-700 max-h-[80vh] overflow-auto">
+      <DialogContent className="max-h-[80vh] overflow-auto border-zinc-700 bg-zinc-900">
         <DialogHeader>
           <DialogTitle>Add New Song</DialogTitle>
-          <DialogDescription>
-            Add a new song to your music library
-          </DialogDescription>
+          <DialogDescription>Add a new song to your music library</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -135,9 +132,7 @@ const AddSongDialog = () => {
             accept="audio/*"
             ref={audioInputRef}
             hidden
-            onChange={(e) =>
-              setFiles((prev) => ({ ...prev, audio: e.target.files![0] }))
-            }
+            onChange={(e) => setFiles((prev) => ({ ...prev, audio: e.target.files![0] }))}
           />
 
           <input
@@ -145,34 +140,26 @@ const AddSongDialog = () => {
             ref={imageInputRef}
             className="hidden"
             accept="image/*"
-            onChange={(e) =>
-              setFiles((prev) => ({ ...prev, image: e.target.files![0] }))
-            }
+            onChange={(e) => setFiles((prev) => ({ ...prev, image: e.target.files![0] }))}
           />
 
           {/* image upload area */}
           <div
-            className="flex items-center justify-center p-6 border-2 border-dashed border-zinc-700 rounded-lg cursor-pointer"
+            className="flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-zinc-700 p-6"
             onClick={() => imageInputRef.current?.click()}
           >
             <div className="text-center">
               {files.image ? (
                 <div className="space-y-2">
-                  <div className="text-sm text-emerald-500">
-                    Image selected:
-                  </div>
-                  <div className="text-xs text-zinc-400">
-                    {files.image.name.slice(0, 20)}
-                  </div>
+                  <div className="text-sm text-emerald-500">Image selected:</div>
+                  <div className="text-xs text-zinc-400">{files.image.name.slice(0, 20)}</div>
                 </div>
               ) : (
                 <>
-                  <div className="p-3 bg-zinc-800 rounded-full inline-block mb-2">
+                  <div className="mb-2 inline-block rounded-full bg-zinc-800 p-3">
                     <Upload className="h-6 w-6 text-zinc-400" />
                   </div>
-                  <div className="text-sm text-zinc-400 mb-2">
-                    Upload artwork
-                  </div>
+                  <div className="mb-2 text-sm text-zinc-400">Upload artwork</div>
                   <Button variant="outline" size="sm" className="text-xs">
                     Choose File
                   </Button>
@@ -190,9 +177,7 @@ const AddSongDialog = () => {
                 onClick={() => audioInputRef.current?.click()}
                 className="w-full"
               >
-                {files.audio
-                  ? files.audio.name.slice(0, 20)
-                  : "Choose Audio File"}
+                {files.audio ? files.audio.name.slice(0, 20) : "Choose Audio File"}
               </Button>
             </div>
           </div>
@@ -202,10 +187,8 @@ const AddSongDialog = () => {
             <label className="text-sm font-medium">Title</label>
             <Input
               value={newSong.title}
-              onChange={(e) =>
-                setNewSong({ ...newSong, title: e.target.value })
-              }
-              className="bg-zinc-800 border-zinc-700"
+              onChange={(e) => setNewSong({ ...newSong, title: e.target.value })}
+              className="border-zinc-700 bg-zinc-800"
             />
           </div>
 
@@ -213,10 +196,8 @@ const AddSongDialog = () => {
             <label className="text-sm font-medium">Artist</label>
             <Input
               value={newSong.artist}
-              onChange={(e) =>
-                setNewSong({ ...newSong, artist: e.target.value })
-              }
-              className="bg-zinc-800 border-zinc-700"
+              onChange={(e) => setNewSong({ ...newSong, artist: e.target.value })}
+              className="border-zinc-700 bg-zinc-800"
             />
           </div>
 
@@ -226,10 +207,8 @@ const AddSongDialog = () => {
               type="number"
               min="0"
               value={newSong.duration}
-              onChange={(e) =>
-                setNewSong({ ...newSong, duration: e.target.value || "0" })
-              }
-              className="bg-zinc-800 border-zinc-700"
+              onChange={(e) => setNewSong({ ...newSong, duration: e.target.value || "0" })}
+              className="border-zinc-700 bg-zinc-800"
             />
           </div>
 
@@ -237,14 +216,12 @@ const AddSongDialog = () => {
             <label className="text-sm font-medium">Album (Optional)</label>
             <Select
               value={newSong.album}
-              onValueChange={(value) =>
-                setNewSong({ ...newSong, album: value })
-              }
+              onValueChange={(value) => setNewSong({ ...newSong, album: value })}
             >
-              <SelectTrigger className="bg-zinc-800 border-zinc-700">
+              <SelectTrigger className="border-zinc-700 bg-zinc-800">
                 <SelectValue placeholder="Select album" />
               </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
+              <SelectContent className="border-zinc-700 bg-zinc-800">
                 <SelectItem value="none">No Album (Single)</SelectItem>
                 {albums.map((album) => (
                   <SelectItem key={album._id} value={album._id}>
@@ -257,11 +234,7 @@ const AddSongDialog = () => {
         </div>
 
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={() => setSongDialogOpen(false)}
-            disabled={isLoading}
-          >
+          <Button variant="outline" onClick={() => setSongDialogOpen(false)} disabled={isLoading}>
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={isLoading}>

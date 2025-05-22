@@ -34,12 +34,12 @@ const AuthCallbackPage = () => {
   }, [isLoaded, user, navigate]);
 
   return (
-    <div className="h-screen w-full bg-black flex items-center justify-center">
-      <Card className="w-[90%] max-w-md bg-zinc-900 border-zinc-800">
+    <div className="flex h-screen w-full items-center justify-center bg-black">
+      <Card className="w-[90%] max-w-md border-zinc-800 bg-zinc-900">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
-          <LoaderIcon className="size-6 text-emerald-500 animate-spin " />
-          <h3 className="text-zinc-400 text-xl font-bold">Loggin you in</h3>
-          <p className="text-zinc-400 text-sm">Redirecting...</p>
+          <LoaderIcon className="size-6 animate-spin text-emerald-500" />
+          <h3 className="text-xl font-bold text-zinc-400">Loggin you in</h3>
+          <p className="text-sm text-zinc-400">Redirecting...</p>
         </CardContent>
       </Card>
     </div>

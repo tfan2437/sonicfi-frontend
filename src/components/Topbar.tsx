@@ -8,17 +8,14 @@ import { buttonVariants } from "@/components/ui/button";
 const Topbar = () => {
   const { isAdmin } = useAuthStore();
   return (
-    <div className="rounded flex items-center justify-between p-4 sticky top-0 bg-zinc-900/75 backdrop-blur-md z-10">
-      <div className="flex gap-2 items-center">
+    <div className="sticky top-0 z-10 flex items-center justify-between rounded bg-zinc-900/75 p-4 backdrop-blur-md">
+      <div className="flex items-center gap-2">
         <img src="/spotify.png" alt="Sonicfi" className="size-8" />
         <span>Sonicfi</span>
       </div>
       <div className="flex items-center gap-4">
         {isAdmin && (
-          <Link
-            to="/admin"
-            className={cn(buttonVariants({ variant: "outline" }))}
-          >
+          <Link to="/admin" className={cn(buttonVariants({ variant: "outline" }))}>
             <LayoutDashboardIcon className="size-4" />
             <span>Admin Dashboard</span>
           </Link>

@@ -20,10 +20,7 @@ export const useChatStore = create<ChatStore>((set) => ({
       set({ users: response.data });
     } catch (error) {
       set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
+        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
       });
     } finally {
       set({ isLoading: false });

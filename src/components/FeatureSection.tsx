@@ -8,10 +8,10 @@ const FeatureSection = () => {
   const { isLoading, error } = useMusicStore();
 
   if (isLoading) return <FeaturedGridSkeleton />;
-  if (error) return <p className="text-red-500 mb-4 text-lg">{error}</p>;
+  if (error) return <p className="mb-4 text-lg text-red-500">{error}</p>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+    <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {/* {featuredSongs.map((song) => (
         <div
           key={song._id}

@@ -37,7 +37,7 @@ const AlbumsTable = () => {
               <img
                 src={album.imageUrl}
                 alt={album.title}
-                className="w-10 h-10 rounded object-cover"
+                className="h-10 w-10 rounded object-cover"
               />
             </TableCell>
             <TableCell className="font-medium">{album.title}</TableCell>
@@ -55,12 +55,12 @@ const AlbumsTable = () => {
               </span>
             </TableCell>
             <TableCell className="text-right">
-              <div className="flex gap-2 justify-end">
+              <div className="flex justify-end gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => deleteAlbum(album._id)}
-                  className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                  className="text-red-400 hover:bg-red-400/10 hover:text-red-300"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>

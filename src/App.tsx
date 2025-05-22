@@ -14,11 +14,7 @@ const App = () => {
       <Routes>
         <Route
           path="/sso-callback"
-          element={
-            <AuthenticateWithRedirectCallback
-              signInForceRedirectUrl={"/auth-callback"}
-            />
-          }
+          element={<AuthenticateWithRedirectCallback signInForceRedirectUrl={"/auth-callback"} />}
         />
         <Route path="/auth-callback" element={<AuthCallbackPage />} />
         <Route path="/admin" element={<AdminPage />} />
@@ -26,7 +22,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/chat" element={<ChatPage />} />
-          <Route path="/albums/:id" element={<AlbumPage />} />
+          <Route path="/album/:id" element={<AlbumPage />} />
         </Route>
       </Routes>
       <Toaster />

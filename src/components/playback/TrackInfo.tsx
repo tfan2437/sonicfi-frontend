@@ -1,21 +1,19 @@
-import { Song } from "@/types";
+import { Track } from "@/types";
 
-const TrackInfo = ({ currentSong }: { currentSong: Song | null }) => {
+const TrackInfo = ({ track }: { track: Track | null }) => {
   return (
-    <div className="flex items-center gap-4 w-1/4">
-      {currentSong && (
+    <div className="flex w-1/4 items-center gap-4">
+      {track && (
         <>
           <img
-            src={currentSong.imageUrl}
-            alt={currentSong.title}
-            className="w-14 h-14 object-cover rounded-md"
+            src={track.image.url}
+            alt={track.name}
+            className="h-14 w-14 rounded-md object-cover"
           />
-          <div className="flex-1 min-w-0">
-            <div className="font-medium truncate hover:underline cursor-pointer">
-              {currentSong.title}
-            </div>
-            <div className="text-xs text-zinc-400 font-light truncate hover:underline cursor-pointer">
-              {currentSong.artist}
+          <div className="min-w-0 flex-1">
+            <div className="cursor-pointer truncate font-medium hover:underline">{track.name}</div>
+            <div className="cursor-pointer truncate text-xs font-light text-zinc-400 hover:underline">
+              {track.artists.map((artist) => artist.name).join(", ")}
             </div>
           </div>
         </>
