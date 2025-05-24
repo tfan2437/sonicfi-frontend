@@ -16,10 +16,13 @@ const PlayButton = ({
 
   return (
     <button
-      onClick={() => handlePlayTrack(track)}
+      onClick={(e) => {
+        e.stopPropagation();
+        handlePlayTrack(track);
+      }}
       className={twMerge(
-        "absolute right-2 bottom-2 cursor-pointer rounded-full bg-black/50 p-2 text-white backdrop-blur-xs transition-all duration-200 hover:scale-105",
-        isCurrentTrack && isPlaying ? "block" : "hidden group-hover:block",
+        "absolute right-2 bottom-2 rounded-full bg-black/50 p-2 text-white backdrop-blur-xs transition-all duration-200 hover:scale-105",
+        isCurrentTrack && isPlaying ? "block" : "hidden group-hover:block"
       )}
     >
       {isCurrentTrack && isPlaying ? (

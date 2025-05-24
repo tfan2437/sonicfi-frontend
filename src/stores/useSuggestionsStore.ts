@@ -16,11 +16,14 @@ interface SuggestStore {
   discoverAlbums: Album[];
   discoverTracks: Track[];
 
+  moreByArtistAlbums: Album[];
+
   isLoading: boolean;
   error: string | null;
 
   fetchNewReleases: () => Promise<void>;
   fetchTopAndMoreLike: () => Promise<void>;
+  fetchMoreByArtistAlbums: (artistId: string) => Promise<void>;
 }
 
 export const useSuggestStore = create<SuggestStore>((set) => ({
@@ -36,6 +39,8 @@ export const useSuggestStore = create<SuggestStore>((set) => ({
   discoverAlbums: [],
   discoverTracks: [],
 
+  moreByArtistAlbums: [],
+
   // state
   isLoading: false,
   error: null,
@@ -48,7 +53,10 @@ export const useSuggestStore = create<SuggestStore>((set) => ({
       set({ newReleaseAlbums, newReleaseTracks });
     } catch (error) {
       set({
-        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
+        error:
+          error instanceof AxiosError
+            ? error.response?.data.message
+            : "An error occurred",
       });
     } finally {
       set({ isLoading: false });
@@ -58,12 +66,36 @@ export const useSuggestStore = create<SuggestStore>((set) => ({
   fetchTopAndMoreLike: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axiosInstance.get(`/suggestions/top-and-more-like-artists`);
+      const response = await axiosInstance.get(
+        `/suggestions/top-and-more-like-artists`
+      );
       const { topArtists, moreLikeArtist } = response.data;
       set({ topArtists, moreLikeArtist });
     } catch (error) {
       set({
-        error: error instanceof AxiosError ? error.response?.data.message : "An error occurred",
+        error:
+          error instanceof AxiosError
+            ? error.response?.data.message
+            : "An error occurred",
+      });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchMoreByArtistAlbums: async (artistId: string) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const response = await axiosInstance.get(`/album/by-artist/${artistId}`);
+      const { albums } = response.data;
+      set({ moreByArtistAlbums: albums });
+    } catch (error) {
+      set({
+        error:
+          error instanceof AxiosError
+            ? error.response?.data.message
+            : "An error occurred",
       });
     } finally {
       set({ isLoading: false });

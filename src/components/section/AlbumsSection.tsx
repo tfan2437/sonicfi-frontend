@@ -1,6 +1,7 @@
 import { Album } from "@/types";
 import SectionGridSkeleton from "@/components/skeletons/SectionGridSkeleton";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface AlbumsSectionProps {
   title: string;
@@ -10,6 +11,7 @@ interface AlbumsSectionProps {
 
 const AlbumsSection = ({ albums, title, isLoading }: AlbumsSectionProps) => {
   const navigate = useNavigate();
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   if (isLoading) return <SectionGridSkeleton />;
 
@@ -17,13 +19,16 @@ const AlbumsSection = ({ albums, title, isLoading }: AlbumsSectionProps) => {
     <div className="px-7">
       <div className="mb-1 flex items-end justify-between px-3">
         <h2 className="font-montserrat text-2xl font-semibold">{title}</h2>
-        <button className="cursor-pointer text-sm text-zinc-400 hover:text-zinc-100 hover:underline">
-          Show all
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-sm text-zinc-400 hover:text-zinc-100 hover:underline"
+        >
+          {showAll ? "Show less" : "Show all"}
         </button>
       </div>
-
+      {/* TODO: add a button to show all albums */}
       <div className="grid grid-cols-7">
-        {albums.map((album) => (
+        {(showAll ? albums : albums.slice(0, 7)).map((album) => (
           <div
             key={album._id}
             onClick={() => navigate(`/album/${album._id}`)}
@@ -39,7 +44,9 @@ const AlbumsSection = ({ albums, title, isLoading }: AlbumsSectionProps) => {
               </div>
             </div>
             <div className="h-[70px] w-full">
-              <h3 className="line-clamp-2 text-[15px] font-light hover:underline">{album.name}</h3>
+              <h3 className="line-clamp-2 text-[15px] font-light hover:underline">
+                {album.name}
+              </h3>
               <p className="mt-1 truncate text-sm font-light text-zinc-400 hover:underline">
                 {album.artists.map((artist) => artist.name).join(", ")}
               </p>

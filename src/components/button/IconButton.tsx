@@ -7,7 +7,7 @@ interface IconButtonProps {
 const IconButton = ({ icon, onClick, disabled = false }: IconButtonProps) => {
   return (
     <button
-      className="flex size-6 cursor-pointer items-center justify-center text-zinc-400 transition-all duration-200 hover:scale-105 hover:text-white"
+      className="flex size-6 cursor-pointer outline-none items-center justify-center text-zinc-400 transition-all duration-200 hover:scale-105 hover:text-white"
       onClick={onClick}
       disabled={disabled}
     >
@@ -15,4 +15,5 @@ const IconButton = ({ icon, onClick, disabled = false }: IconButtonProps) => {
     </button>
   );
 };
+
 export default IconButton;

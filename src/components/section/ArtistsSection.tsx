@@ -40,7 +40,7 @@ const ArtistsSection = ({ title, artists, isLoading }: ArtistsSectionProps) => {
             </div>
             <div className="h-auto w-full">
               <h3 className="line-clamp-1 text-[15px] font-light hover:underline">
-                {artist.name} sdfd dsfds fdsfsdf
+                {artist.name}
               </h3>
               <p className="mt-1 truncate text-sm font-light text-zinc-400 hover:underline">
                 Artist

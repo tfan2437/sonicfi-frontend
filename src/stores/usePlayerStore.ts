@@ -11,7 +11,8 @@ interface PlayerStore {
   setCurrentTrack: (track: Track | null) => void;
   initializeQueue: (tracks: Track[]) => void;
   setTracksAndCurrentTrack: (track: Track, tracks: Track[]) => void;
-  playAlbum: (tracks: Track[], startIndex?: number) => void;
+  playListTracks: (tracks: Track[]) => void;
+  playTracks: (tracks: Track[], startIndex?: number) => void;
   playNext: () => void;
   playPrevious: () => void;
 }
@@ -21,6 +22,21 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   queuedTracks: [],
   isPlaying: false,
   currentIndex: -1,
+
+  playListTracks: (tracks: Track[]) => {
+    if (tracks.length === 0) return;
+
+    if (tracks.some((track) => track._id === get().currentTrack?._id)) {
+      set({ isPlaying: !get().isPlaying });
+    } else {
+      set({
+        queuedTracks: tracks,
+        currentTrack: tracks[0],
+        currentIndex: 0,
+        isPlaying: true,
+      });
+    }
+  },
 
   setCurrentTrack: (track: Track | null) => {
     if (!track) return;
@@ -71,7 +87,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     }
   },
 
-  playAlbum: (tracks: Track[], startIndex = 0) => {
+  playTracks: (tracks: Track[], startIndex = 0) => {
     if (tracks.length === 0) return;
 
     const track = tracks[startIndex];
@@ -109,7 +125,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     }
 
     const index =
-      currentIndex === -1 ? 0 : (currentIndex - 1 + queuedTracks.length) % queuedTracks.length;
+      currentIndex === -1
+        ? 0
+        : (currentIndex - 1 + queuedTracks.length) % queuedTracks.length;
 
     set({
       currentTrack: queuedTracks[index],
