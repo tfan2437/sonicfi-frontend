@@ -5,13 +5,12 @@ import { useNavigate } from "react-router-dom";
 interface ArtistsSectionProps {
   title: string;
   artists: Artist[];
-  isLoading: boolean;
 }
 
-const ArtistsSection = ({ title, artists, isLoading }: ArtistsSectionProps) => {
+const ArtistsSection = ({ title, artists }: ArtistsSectionProps) => {
   const navigate = useNavigate();
 
-  if (isLoading) return <SectionGridSkeleton />;
+  if (!artists) return <SectionGridSkeleton />;
 
   return (
     <div className="px-7">

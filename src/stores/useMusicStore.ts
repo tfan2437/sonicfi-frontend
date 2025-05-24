@@ -1,7 +1,6 @@
 import { Album, Artist, Track } from "@/types";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
-import { AxiosError } from "axios";
 
 interface MusicStore {
   artist: Artist | null;
@@ -9,13 +8,12 @@ interface MusicStore {
   albums: Album[];
   tracks: Track[];
 
-  isLoading: boolean;
-  error: string | null;
-
-  isAlbumLoading: boolean;
-
-  fetchArtistById: (id: string) => Promise<void>;
-  fetchAlbumById: (id: string) => Promise<void>;
+  fetchAlbumById: (
+    id: string
+  ) => Promise<{ album: Album; tracks: Track[] } | null>;
+  fetchArtistById: (
+    id: string
+  ) => Promise<{ artist: Artist; albums: Album[]; tracks: Track[] } | null>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -25,45 +23,28 @@ export const useMusicStore = create<MusicStore>((set) => ({
   albums: [],
   tracks: [],
 
-  isLoading: false,
-  error: null,
-
-  isAlbumLoading: true,
-
   // actions
   fetchAlbumById: async (id: string) => {
-    set({ isAlbumLoading: true, error: null });
     try {
       const response = await axiosInstance.get(`/album/${id}`);
       const { album, tracks } = response.data;
       set({ album, tracks });
+      return { album, tracks };
     } catch (error) {
-      set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
-      });
-    } finally {
-      set({ isAlbumLoading: false });
+      console.log("Error in fetchAlbumById: ", error);
+      return null;
     }
   },
 
   fetchArtistById: async (id: string) => {
-    set({ isLoading: true, error: null });
     try {
       const response = await axiosInstance.get(`/artist/${id}`);
       const { artist, albums, tracks } = response.data;
       set({ artist, albums, tracks });
+      return { artist, albums, tracks };
     } catch (error) {
-      set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
-      });
-    } finally {
-      set({ isLoading: false });
+      console.log("Error in fetchArtistById: ", error);
+      return null;
     }
   },
 }));

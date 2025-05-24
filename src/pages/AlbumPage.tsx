@@ -1,37 +1,40 @@
-import { useMusicStore } from "@/stores/useMusicStore";
-import { useEffect } from "react";
+import { Album, Track } from "@/types";
+import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ScrollArea } from "@/components/ui/scroll-area";
+// utils
+import { formatDuration } from "@/lib/utils";
+import { formatDate } from "@/lib/format";
+// store
+import { useMusicStore } from "@/stores/useMusicStore";
+import { useSuggestStore } from "@/stores/useSuggestionsStore";
+import { usePlayerStore } from "@/stores/usePlayerStore";
+// components
 import { ClockIcon, DotIcon } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
-import { formatDuration } from "@/lib/utils";
-import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Album, Track } from "@/types";
 import MusicAnimationIcon from "@/components/icons/MusicAnimationIcon";
-import { formatDate } from "@/lib/format";
-import { useSuggestStore } from "@/stores/useSuggestionsStore";
 import AlbumsSection from "@/components/section/AlbumsSection";
-
-// TODO: loading state and loading skeleton for album, tracks, and more like artist albums
 
 const AlbumPage = () => {
   const { id } = useParams();
-  const { isAlbumLoading, album, tracks, fetchAlbumById } = useMusicStore();
-
   const { currentTrack, playTracks, togglePlay, isPlaying } = usePlayerStore();
-  const { isLoading, moreByArtistAlbums, fetchMoreByArtistAlbums } =
-    useSuggestStore();
+  const { fetchAlbumById } = useMusicStore();
+  const { artistAlbums, fetchArtistAlbums } = useSuggestStore();
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const [album, setAlbum] = useState<Album | null>(null);
+  const [tracks, setTracks] = useState<Track[] | null>(null);
 
   const isAlbumPlaying = album?.track_ids.some(
     (id) => id === currentTrack?._id
   );
 
-  const handlePlayTrack = (index: number) => {
+  const handlePlayTrack = (tracks: Track[], index: number) => {
     playTracks(tracks, index);
   };
 
-  const handlePlayAlbum = () => {
+  const handlePlayAlbum = (tracks: Track[]) => {
     if (isAlbumPlaying) {
       togglePlay();
     } else {
@@ -40,25 +43,46 @@ const AlbumPage = () => {
   };
 
   useEffect(() => {
-    if (id) fetchAlbumById(id);
-  }, [fetchAlbumById, id]);
+    const getAlbum = async (id: string) => {
+      const response = await fetchAlbumById(id);
+      if (response) {
+        setAlbum(response.album);
+        setTracks(response.tracks);
+      }
 
+      const artistId = response?.album?.artists?.[0]?._id || "";
+      if (artistId) {
+        fetchArtistAlbums(artistId);
+      }
+    };
+
+    if (id) {
+      getAlbum(id);
+    }
+  }, [fetchAlbumById, fetchArtistAlbums, id]);
+
+  // scroll to top when album page render
   useEffect(() => {
-    if (album) fetchMoreByArtistAlbums(album.artists[0].id);
-  }, [fetchMoreByArtistAlbums, album, id]);
+    const scrollArea = scrollAreaRef.current;
+    if (scrollArea) {
+      const viewport = scrollArea.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
+      viewport?.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [id]);
 
-  if (!album || !tracks || isAlbumLoading)
-    return <div className="text-4xl text-white">Loading...</div>;
+  if (!album || !tracks || !artistAlbums) return <AlbumSkeleton />;
 
   return (
     <div className="h-full bg-zinc-950 select-none">
-      <ScrollArea className="h-full w-full">
+      <ScrollArea ref={scrollAreaRef} className="h-full w-full">
         <div className="h-full w-full relative">
           <AlbumColorGradient color={album.color} />
           <AlbumInfo
             album={album}
             trackLength={tracks.length}
-            handlePlayAlbum={handlePlayAlbum}
+            handlePlayAlbum={() => handlePlayAlbum(tracks)}
             isPlaying={isPlaying}
             isAlbumPlaying={isAlbumPlaying || false}
           />
@@ -73,7 +97,7 @@ const AlbumPage = () => {
                   index={index}
                   isPlaying={isPlaying}
                   isCurrentTrack={currentTrack?._id === track._id}
-                  handlePlayTrack={handlePlayTrack}
+                  handlePlayTrack={() => handlePlayTrack(tracks, index)}
                 />
               ))}
             </div>
@@ -85,8 +109,7 @@ const AlbumPage = () => {
           <div className="w-full mt-20 pb-6">
             <AlbumsSection
               title={`More by ${album.artists[0].name}`}
-              albums={moreByArtistAlbums.filter((a) => a._id !== album._id)}
-              isLoading={isLoading}
+              albums={artistAlbums.filter((a) => a._id !== album._id)}
             />
           </div>
         </div>
@@ -137,7 +160,7 @@ const AlbumInfo = ({
             {album.name}
           </h1>
           <div className="flex items-center gap-1 text-sm font-light text-white/50">
-            <Link to={`/artist/${album.artists[0].id}`}>
+            <Link to={`/artist/${album.artists[0]._id}`}>
               <span className="font-semibold text-white hover:underline">
                 {album.artists.map((artist) => artist.name).join(", ")}
               </span>
@@ -193,11 +216,11 @@ const TrackListItem = ({
   index: number;
   isPlaying: boolean;
   isCurrentTrack: boolean;
-  handlePlayTrack: (index: number) => void;
+  handlePlayTrack: () => void;
 }) => {
   return (
     <div
-      onClick={() => handlePlayTrack(index)}
+      onClick={handlePlayTrack}
       key={track._id}
       className="group flex cursor-pointer items-center justify-between rounded-md pl-3.5 pr-6 py-2 text-sm text-zinc-400 hover:bg-white/10"
     >
@@ -239,6 +262,41 @@ const AlbumCopyright = ({
         <span>{copyright}</span>
         <span>{copyright}</span>
       </div>
+    </div>
+  );
+};
+
+const AlbumSkeleton = () => {
+  return (
+    <div className="h-full bg-zinc-950 select-none">
+      <ScrollArea className="h-full w-full">
+        <div className="h-full w-full relative">
+          <AlbumColorGradient color={"#000000"} />
+          <div className="w-full flex items-end justify-between pr-4">
+            <div className="z-10 p-6">
+              <div className="size-60 animate-pulse rounded-md bg-zinc-800/50" />
+            </div>
+          </div>
+          <div className="bg-black/20 backdrop-blur-sm pb-40">
+            <TableHeader />
+            <div className="space-y-2 py-4 px-6">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="group flex cursor-pointer items-center justify-between rounded-md pl-3.5 pr-6 py-2 text-sm text-zinc-400 hover:bg-white/10"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-center size-6">
+                      {index + 1}
+                    </div>
+                    <div className="flex items-center gap-3 h-10 w-32 bg-zinc-800/50 animate-pulse rounded-md" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </ScrollArea>
     </div>
   );
 };

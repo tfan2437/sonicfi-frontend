@@ -6,14 +6,13 @@ import { useState } from "react";
 interface AlbumsSectionProps {
   title: string;
   albums: Album[];
-  isLoading: boolean;
 }
 
-const AlbumsSection = ({ albums, title, isLoading }: AlbumsSectionProps) => {
+const AlbumsSection = ({ albums, title }: AlbumsSectionProps) => {
   const navigate = useNavigate();
   const [showAll, setShowAll] = useState<boolean>(false);
 
-  if (isLoading) return <SectionGridSkeleton />;
+  if (!albums) return <SectionGridSkeleton />;
 
   return (
     <div className="px-7">

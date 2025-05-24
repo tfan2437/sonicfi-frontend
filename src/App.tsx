@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 // pages
-import HomePage from "@/pages/home/HomePage";
+import HomePage from "@/pages/HomePage";
 import AuthCallbackPage from "@/pages/auth-callback/AuthCallbackPage";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import MainLayout from "@/layout/MainLayout";

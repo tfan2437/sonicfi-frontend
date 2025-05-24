@@ -1,104 +1,91 @@
 import { Album, Artist, Track } from "@/types";
 import { create } from "zustand";
 import { axiosInstance } from "@/lib/axios";
-import { AxiosError } from "axios";
 
 interface SuggestStore {
-  newReleaseAlbums: Album[];
-  newReleaseTracks: Track[];
+  newReleaseAlbums: Album[] | null;
+  newReleaseTracks: Track[] | null;
 
-  topArtists: Artist[];
-  moreLikeArtist: Artist | null;
+  topArtists: Artist[] | null;
 
-  popularAlbums: Album[];
-  popularTracks: Track[];
+  moreByArtist: Artist | null;
+  moreByArtistAlbums: Album[] | null;
 
-  discoverAlbums: Album[];
-  discoverTracks: Track[];
+  //
 
-  moreByArtistAlbums: Album[];
+  popularAlbums: Album[] | null;
+  popularTracks: Track[] | null;
 
-  isLoading: boolean;
-  error: string | null;
+  discoverAlbums: Album[] | null;
+  discoverTracks: Track[] | null;
+
+  artistAlbums: Album[] | null;
 
   fetchNewReleases: () => Promise<void>;
-  fetchTopAndMoreLike: () => Promise<void>;
-  fetchMoreByArtistAlbums: (artistId: string) => Promise<void>;
+  fetchTopArtistsAndMoreBy: () => Promise<void>;
+  fetchDiscoverAndPopular: () => Promise<void>;
+  fetchArtistAlbums: (artistId: string) => Promise<void>;
 }
 
 export const useSuggestStore = create<SuggestStore>((set) => ({
-  newReleaseAlbums: [],
-  newReleaseTracks: [],
+  newReleaseAlbums: null,
+  newReleaseTracks: null,
 
-  topArtists: [],
-  moreLikeArtist: null,
+  topArtists: null,
 
-  popularAlbums: [],
-  popularTracks: [],
+  moreByArtist: null,
+  moreByArtistAlbums: null,
 
-  discoverAlbums: [],
-  discoverTracks: [],
+  popularAlbums: null,
+  popularTracks: null,
 
-  moreByArtistAlbums: [],
+  discoverAlbums: null,
+  discoverTracks: null,
 
-  // state
-  isLoading: false,
-  error: null,
+  artistAlbums: null,
 
   fetchNewReleases: async () => {
-    set({ isLoading: true, error: null });
     try {
-      const response = await axiosInstance.get(`/suggestions/new-releases`);
+      const response = await axiosInstance.get(`/suggestion/new-releases`);
       const { newReleaseAlbums, newReleaseTracks } = response.data;
       set({ newReleaseAlbums, newReleaseTracks });
     } catch (error) {
-      set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
-      });
-    } finally {
-      set({ isLoading: false });
+      console.log("Error in fetchNewReleases: ", error);
     }
   },
 
-  fetchTopAndMoreLike: async () => {
-    set({ isLoading: true, error: null });
+  fetchTopArtistsAndMoreBy: async () => {
     try {
       const response = await axiosInstance.get(
-        `/suggestions/top-and-more-like-artists`
+        `/suggestion/top-artists-and-more-by`
       );
-      const { topArtists, moreLikeArtist } = response.data;
-      set({ topArtists, moreLikeArtist });
+      const { topArtists, moreByArtist, moreByArtistAlbums } = response.data;
+      set({ topArtists, moreByArtist, moreByArtistAlbums });
     } catch (error) {
-      set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
-      });
-    } finally {
-      set({ isLoading: false });
+      console.log("Error in fetchTopArtistsAndMoreBy: ", error);
     }
   },
 
-  fetchMoreByArtistAlbums: async (artistId: string) => {
-    set({ isLoading: true, error: null });
+  fetchDiscoverAndPopular: async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/suggestion/discover-and-popular`
+      );
+      const { popularAlbums, popularTracks, discoverAlbums, discoverTracks } =
+        response.data;
+      set({ popularAlbums, popularTracks, discoverAlbums, discoverTracks });
+    } catch (error) {
+      console.log("Error in fetchTopArtistsAndMoreBy: ", error);
+    }
+  },
 
+  fetchArtistAlbums: async (artistId: string) => {
     try {
       const response = await axiosInstance.get(`/album/by-artist/${artistId}`);
       const { albums } = response.data;
-      set({ moreByArtistAlbums: albums });
+      set({ artistAlbums: albums });
     } catch (error) {
-      set({
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "An error occurred",
-      });
-    } finally {
-      set({ isLoading: false });
+      console.log("Error in fetchArtistAlbums: ", error);
     }
   },
 }));

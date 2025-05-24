@@ -2,15 +2,18 @@ import { Track } from "@/types";
 import SectionGridSkeleton from "@/components/skeletons/SectionGridSkeleton";
 import PlayButton from "@/components/PlayButton";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useState } from "react";
+
 interface TracksSectionProps {
   title: string;
   tracks: Track[];
-  isLoading: boolean;
 }
 
-const TracksSection = ({ tracks, title, isLoading }: TracksSectionProps) => {
+const TracksSection = ({ tracks, title }: TracksSectionProps) => {
   const { currentTrack, togglePlay, setTracksAndCurrentTrack } =
     usePlayerStore();
+
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   const handlePlayTrack = (track: Track) => {
     if (currentTrack?._id === track._id) {
@@ -20,19 +23,22 @@ const TracksSection = ({ tracks, title, isLoading }: TracksSectionProps) => {
     }
   };
 
-  if (isLoading) return <SectionGridSkeleton />;
+  if (!tracks) return <SectionGridSkeleton />;
 
   return (
     <div className="px-7">
       <div className="mb-1 flex items-end justify-between px-3">
         <h2 className="font-montserrat text-2xl font-semibold">{title}</h2>
-        <button className="cursor-pointer text-sm text-zinc-400 hover:text-zinc-100 hover:underline">
-          Show all
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="cursor-pointer text-sm text-zinc-400 hover:text-zinc-100 hover:underline"
+        >
+          {showAll ? "Show less" : "Show all"}
         </button>
       </div>
 
       <div className="grid grid-cols-7">
-        {tracks.map((track) => (
+        {(showAll ? tracks : tracks.slice(0, 7)).map((track) => (
           <div
             key={track._id}
             onClick={() => handlePlayTrack(track)}

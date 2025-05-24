@@ -1,21 +1,8 @@
-export interface Song {
-  _id: string;
-  title: string;
-  artist: string;
-  albumId: string | null;
-  imageUrl: string;
-  audioUrl: string;
-  duration: number;
-  // date
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Album {
   _id: string;
   type: string;
   name: string;
-  artists: { id: string; name: string }[];
+  artists: { _id: string; name: string }[];
   image: {
     url: string;
     width: number;
@@ -46,7 +33,7 @@ export interface Track {
   album_id: string;
   track_number: number;
   disc_number: number;
-  artists: { id: string; name: string }[];
+  artists: { _id: string; name: string }[];
   playcount: number;
   // date
   createdAt: string;
