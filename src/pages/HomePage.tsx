@@ -55,7 +55,7 @@ const HomePage = () => {
   if (hasEmpty) return <div className="text-4xl text-white">Loading...</div>;
 
   return (
-    <main className="h-full overflow-hidden rounded bg-zinc-950">
+    <main className="h-full overflow-hidden rounded-lg bg-zinc-900">
       <ScrollArea className="h-full">
         <FeatureSection />
         <div className="space-y-8">

@@ -30,10 +30,6 @@ const AlbumPage = () => {
     (id) => id === currentTrack?._id
   );
 
-  const handlePlayTrack = (tracks: Track[], index: number) => {
-    playTracks(tracks, index);
-  };
-
   const handlePlayAlbum = (tracks: Track[]) => {
     if (isAlbumPlaying) {
       togglePlay();
@@ -75,7 +71,7 @@ const AlbumPage = () => {
   if (!album || !tracks || !artistAlbums) return <AlbumSkeleton />;
 
   return (
-    <div className="h-full bg-zinc-950 select-none">
+    <div className="h-full bg-zinc-900 select-none">
       <ScrollArea ref={scrollAreaRef} className="h-full w-full">
         <div className="h-full w-full relative">
           <AlbumColorGradient color={album.color} />
@@ -97,7 +93,7 @@ const AlbumPage = () => {
                   index={index}
                   isPlaying={isPlaying}
                   isCurrentTrack={currentTrack?._id === track._id}
-                  handlePlayTrack={() => handlePlayTrack(tracks, index)}
+                  handlePlayTrack={() => playTracks(tracks, index)}
                 />
               ))}
             </div>
@@ -268,7 +264,7 @@ const AlbumCopyright = ({
 
 const AlbumSkeleton = () => {
   return (
-    <div className="h-full bg-zinc-950 select-none">
+    <div className="h-full bg-zinc-900 select-none">
       <ScrollArea className="h-full w-full">
         <div className="h-full w-full relative">
           <AlbumColorGradient color={"#000000"} />

@@ -47,7 +47,7 @@ const ArtistPage = () => {
   }
 
   return (
-    <div className="h-full bg-zinc-950 select-none">
+    <div className="h-full bg-zinc-900 select-none">
       <ScrollArea className="h-full w-full">
         <div className="h-full w-full relative">
           <ArtistHeaderImage headerImage={artist.header_image.url} />
@@ -241,7 +241,7 @@ const TrackListItem = ({
 
 const ArtistSkeleton = () => {
   return (
-    <div className="h-full bg-zinc-950 select-none">
+    <div className="h-full bg-zinc-900 select-none">
       <ScrollArea className="h-full w-full">
         <div className="h-full w-full relative">
           <div className="flex gap-6 px-8 py-6 w-full h-[350px] rounded-t-md bg-zinc-800/50 animate-pulse" />
