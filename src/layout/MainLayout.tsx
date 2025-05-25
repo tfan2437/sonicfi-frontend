@@ -1,4 +1,8 @@
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 import { Outlet } from "react-router-dom";
 import LeftSidebar from "@/components/layout/LeftSidebar";
 import FriendsActivity from "@/components/layout/FriendsActivity";
@@ -22,33 +26,13 @@ const MainLayout = () => {
   return (
     <div className="flex h-screen flex-col bg-black text-white">
       <Navbar />
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="flex h-full flex-1 overflow-hidden p-2"
-      >
-        {/* Left Sidebar */}
-        <ResizablePanel defaultSize={16} minSize={isMobile ? 0 : 10} maxSize={16}>
-          <LeftSidebar />
-        </ResizablePanel>
-        <ResizableHandle className="w-2 rounded-lg bg-black transition-colors" />
-        {/* Main Content */}
-        <ResizablePanel defaultSize={isMobile ? 80 : 60}>
+
+      <div className="flex h-full flex-1 gap-2 overflow-hidden p-2">
+        <LeftSidebar />
+        <div className="flex-1">
           <Outlet />
-        </ResizablePanel>
-        {/* {!isMobile && (
-          <>
-            <ResizableHandle className="w-2 bg-black rounded-lg transition-colors" />
-            <ResizablePanel
-              defaultSize={20}
-              minSize={0}
-              maxSize={25}
-              collapsedSize={0}
-            >
-              <FriendsActivity />
-            </ResizablePanel>
-          </>
-        )} */}
-      </ResizablePanelGroup>
+        </div>
+      </div>
       <TrackControl />
       <AudioPlayer />
     </div>
