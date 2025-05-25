@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 // utils
 import { formatDuration } from "@/lib/utils";
-import { formatNumber } from "@/lib/format";
+import { formatNumber } from "@/lib/utils";
 // store
 import { useMusicStore } from "@/stores/useMusicStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -110,7 +110,7 @@ const ArtistHeaderImage = ({ headerImage }: { headerImage: string }) => {
         <div
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(to bottom, transparent, #09090b)`,
+            background: `linear-gradient(to bottom, transparent, #18181b)`,
           }}
         />
       </div>

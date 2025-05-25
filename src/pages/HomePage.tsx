@@ -1,8 +1,9 @@
-import FeatureSection from "@/components/FeatureSection";
 import { useEffect } from "react";
+// store
+import { useSuggestStore } from "@/stores/useSuggestionsStore";
+// components
 import { ScrollArea } from "@/components/ui/scroll-area";
 import TracksSection from "@/components/section/TracksSection";
-import { useSuggestStore } from "@/stores/useSuggestionsStore";
 import AlbumsSection from "@/components/section/AlbumsSection";
 import ArtistsSection from "@/components/section/ArtistsSection";
 
@@ -57,7 +58,6 @@ const HomePage = () => {
   return (
     <main className="h-full overflow-hidden rounded-lg bg-zinc-900">
       <ScrollArea className="h-full">
-        <FeatureSection />
         <div className="space-y-8">
           <ArtistsSection title="Top Artists" artists={topArtists} />
           <AlbumsSection

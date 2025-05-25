@@ -2,7 +2,7 @@ export interface Album {
   _id: string;
   type: string;
   name: string;
-  artists: { _id: string; name: string }[];
+  artists: ArtistCredit[];
   image: {
     url: string;
     width: number;
@@ -33,7 +33,7 @@ export interface Track {
   album_id: string;
   track_number: number;
   disc_number: number;
-  artists: { _id: string; name: string }[];
+  artists: ArtistCredit[];
   playcount: number;
   // date
   createdAt: string;
@@ -72,6 +72,11 @@ export interface Artist {
   // date
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ArtistCredit {
+  _id: string;
+  name: string;
 }
 
 export interface Stats {

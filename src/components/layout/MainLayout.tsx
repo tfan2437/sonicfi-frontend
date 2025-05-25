@@ -6,10 +6,10 @@ import {
 import { Outlet } from "react-router-dom";
 import LeftSidebar from "@/components/layout/LeftSidebar";
 import FriendsActivity from "@/components/layout/FriendsActivity";
-import AudioPlayer from "@/components/layout/AudioPlayer";
-import TrackControl from "@/components/layout/TrackControl";
+import AudioPlayer from "@/components/playback/AudioPlayer";
+import TrackControl from "@/components/playback/TrackControl";
 import { useEffect, useState } from "react";
-import Navbar from "@/components/layout/Navbar";
+import Navbar from "@/components/nav/Navbar";
 const MainLayout = () => {
   const [isMobile, setIsMobile] = useState(false);
 

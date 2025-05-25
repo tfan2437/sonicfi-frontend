@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 // utils
 import { formatDuration } from "@/lib/utils";
-import { formatDate } from "@/lib/format";
+import { formatDate } from "@/lib/utils";
 // store
 import { useMusicStore } from "@/stores/useMusicStore";
 import { useSuggestStore } from "@/stores/useSuggestionsStore";
@@ -15,6 +15,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
 import MusicAnimationIcon from "@/components/icons/MusicAnimationIcon";
 import AlbumsSection from "@/components/section/AlbumsSection";
+import ContextMenu from "@/components/ContextMenu";
 
 const AlbumPage = () => {
   const { id } = useParams();
@@ -120,7 +121,7 @@ const AlbumColorGradient = ({ color }: { color: string }) => {
     <div
       className="absolute inset-0 h-[500px] w-full rounded-md"
       style={{
-        background: `linear-gradient(to bottom, ${color}, #09090b)`,
+        background: `linear-gradient(to bottom, ${color}, #18181b)`,
       }}
     />
   );
@@ -239,7 +240,10 @@ const TrackListItem = ({
         </div>
       </div>
 
-      <div className="flex items-center">{formatDuration(track.duration)}</div>
+      <div className="flex items-center gap-2">
+        <span>{formatDuration(track.duration)}</span>
+        <ContextMenu />
+      </div>
     </div>
   );
 };

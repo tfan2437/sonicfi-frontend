@@ -8,7 +8,7 @@ const TrackControl = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { currentTrack } = usePlayerStore();
 
-  const [volume, setVolume] = useState<number>(75);
+  const [volume, setVolume] = useState<number>(50);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
 
@@ -47,8 +47,16 @@ const TrackControl = () => {
     <div className="h-20 w-full border-t border-zinc-800 bg-black px-3">
       <div className="flex h-full w-full items-center">
         <TrackInfo track={currentTrack} />
-        <PlaybackControl currentTime={currentTime} duration={duration} handleSeek={handleSeek} />
-        <VolumeControl volume={volume} setVolume={setVolume} audioRef={audioRef} />
+        <PlaybackControl
+          currentTime={currentTime}
+          duration={duration}
+          handleSeek={handleSeek}
+        />
+        <VolumeControl
+          volume={volume}
+          setVolume={setVolume}
+          audioRef={audioRef}
+        />
       </div>
     </div>
   );

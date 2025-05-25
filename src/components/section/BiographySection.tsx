@@ -1,4 +1,4 @@
-import { formatNumber } from "@/lib/format";
+import { formatNumber } from "@/lib/utils";
 import { Artist } from "@/types";
 import React, { JSX } from "react";
 import { Link } from "react-router-dom";
