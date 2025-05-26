@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import ProfileImage from "@/components/nav/ProfileImage";
@@ -11,13 +11,15 @@ const Navbar = () => {
     <nav className="px-2 pt-3 pb-1 w-full">
       <div className="w-full grid grid-cols-3 items-center h-fit">
         <div className="flex items-center gap-6 h-full">
-          <div className="h-9 w-fit">
-            <img
-              src={"/sonicfi-logo.png"}
-              alt="sonicfi-logo"
-              className="px-2 h-9"
-            />
-          </div>
+          <Link to="/">
+            <div className="h-auto w-36">
+              <img
+                src={"/sonicfi-logo.png"}
+                alt="sonicfi-logo"
+                className="px-2 w-full"
+              />
+            </div>
+          </Link>
           <div className="h-9 w-fit flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}

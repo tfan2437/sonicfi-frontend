@@ -4,6 +4,7 @@ import MainLayout from "@/components/layout/MainLayout";
 import HomePage from "@/pages/HomePage";
 import ArtistPage from "@/pages/ArtistPage";
 import AlbumPage from "@/pages/AlbumPage";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route path="/artist/:id" element={<ArtistPage />} />
           <Route path="/album/:id" element={<AlbumPage />} />
         </Route>
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </>
   );

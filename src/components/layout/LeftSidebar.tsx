@@ -58,7 +58,7 @@ const LeftSidebar = () => {
                 >
                   <div className="size-12">
                     <img
-                      src={track.image.url}
+                      src={track.album.image.url}
                       alt={track.name}
                       className="size-12 rounded"
                     />

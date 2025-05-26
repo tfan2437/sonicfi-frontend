@@ -218,7 +218,7 @@ const TrackListItem = ({
       </div>
       <div className="flex items-center gap-3">
         <img
-          src={track.image.url}
+          src={track.album.image.url}
           alt={track.name}
           className="w-10 h-10 rounded-[3px]"
         />

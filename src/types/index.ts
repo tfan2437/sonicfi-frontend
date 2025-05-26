@@ -24,13 +24,19 @@ export interface Track {
   _id: string;
   name: string;
   preview_url: string;
-  image: {
-    url: string;
-    width: number;
-    height: number;
-  };
   duration: number;
-  album_id: string;
+  album: {
+    _id: string;
+    type: string;
+    name: string;
+    image: {
+      url: string;
+      width: number;
+      height: number;
+    };
+    release_date: string;
+  };
+  release_date: string;
   track_number: number;
   disc_number: number;
   artists: ArtistCredit[];
@@ -77,6 +83,11 @@ export interface Artist {
 export interface ArtistCredit {
   _id: string;
   name: string;
+  profile_image: {
+    url: string;
+    width: number;
+    height: number;
+  };
 }
 
 export interface Stats {

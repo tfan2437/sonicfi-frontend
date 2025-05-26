@@ -15,7 +15,7 @@ const TrackCard = ({ track, handlePlayTrack }: ContentCardProps) => {
       <div className="relative mb-1.5">
         <div className="aspect-square overflow-hidden rounded shadow-lg">
           <img
-            src={track.image.url}
+            src={track.album.image.url}
             alt={track.name}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             draggable={false}
