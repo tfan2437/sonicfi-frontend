@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Track } from "@/types";
+import { Playlist, Track } from "@/types";
 
 interface PlayerStore {
   currentTrack: Track | null;
@@ -7,14 +7,21 @@ interface PlayerStore {
   isPlaying: boolean;
   currentIndex: number;
 
+  playListId: string | null;
+  playList: Playlist | null;
+
   togglePlay: () => void;
   setCurrentTrack: (track: Track | null) => void;
   initializeQueue: (tracks: Track[]) => void;
-  setTracksAndCurrentTrack: (track: Track, tracks: Track[]) => void;
-  playListTracks: (tracks: Track[]) => void;
+  setTracksAndCurrentTrack: (
+    track: Track,
+    tracks: Track[],
+    playListId?: string
+  ) => void;
   playTracks: (tracks: Track[], startIndex?: number) => void;
   playNext: () => void;
   playPrevious: () => void;
+  setPlayList: (playList: Playlist | null) => void;
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -22,21 +29,8 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   queuedTracks: [],
   isPlaying: false,
   currentIndex: -1,
-
-  playListTracks: (tracks: Track[]) => {
-    if (tracks.length === 0) return;
-
-    if (tracks.some((track) => track._id === get().currentTrack?._id)) {
-      set({ isPlaying: !get().isPlaying });
-    } else {
-      set({
-        queuedTracks: tracks,
-        currentTrack: tracks[0],
-        currentIndex: 0,
-        isPlaying: true,
-      });
-    }
-  },
+  playListId: null,
+  playList: null,
 
   setCurrentTrack: (track: Track | null) => {
     if (!track) return;
@@ -62,7 +56,11 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     });
   },
 
-  setTracksAndCurrentTrack: (track: Track, tracks: Track[]) => {
+  setTracksAndCurrentTrack: (
+    track: Track,
+    tracks: Track[],
+    playListId: string | null = null
+  ) => {
     const currentTracks = get().queuedTracks;
 
     const hasChanged =
@@ -77,16 +75,19 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         currentTrack: track,
         currentIndex: index,
         isPlaying: true,
+        playListId: playListId,
       });
     } else {
       set({
         currentTrack: track,
         currentIndex: index,
         isPlaying: true,
+        playListId: playListId,
       });
     }
   },
 
+  // , playListId: string | null = null
   playTracks: (tracks: Track[], startIndex = 0) => {
     if (tracks.length === 0) return;
 
@@ -134,5 +135,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       currentIndex: index,
       isPlaying: true,
     });
+  },
+
+  setPlayList: (playList: Playlist | null) => {
+    set({ playList });
   },
 }));

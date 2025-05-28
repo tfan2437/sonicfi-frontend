@@ -96,3 +96,23 @@ export interface Stats {
   totalUsers: number;
   totalArtists: number;
 }
+
+export interface User {
+  uid: string;
+  username: string;
+  email: string;
+  image_url: string;
+  theme: string;
+  provider: string;
+  // date
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Playlist {
+  _id: string;
+  uid: string;
+  name: string;
+  track_ids: string[];
+  tracks: Track[];
+}

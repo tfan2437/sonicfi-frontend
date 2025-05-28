@@ -1,27 +1,26 @@
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "@/components/ui/resizable";
+import type { User } from "firebase/auth";
+
+import { auth } from "@/services/firebase";
 import { Outlet } from "react-router-dom";
 import LeftSidebar from "@/components/layout/LeftSidebar";
-import FriendsActivity from "@/components/layout/FriendsActivity";
 import AudioPlayer from "@/components/playback/AudioPlayer";
 import TrackControl from "@/components/playback/TrackControl";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Navbar from "@/components/nav/Navbar";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { useUserStore } from "@/stores/useAuthStore";
+
 const MainLayout = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
+  const { fetchUser } = useUserStore();
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+      if (user) {
+        fetchUser(user.uid);
+      }
+    });
+    return () => unsubscribe();
+  }, [fetchUser]);
 
   return (
     <div className="flex h-screen flex-col bg-black text-white">

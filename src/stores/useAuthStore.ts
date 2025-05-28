@@ -1,42 +1,23 @@
-import { axiosInstance } from "@/lib/axios";
-import { AxiosError } from "axios";
+import { User } from "@/types";
 import { create } from "zustand";
+import { axiosInstance } from "@/lib/axios";
 
-interface AuthStore {
-  isAdmin: boolean;
-  isLoading: boolean;
-  error: string | null;
+interface UserStore {
+  user: User | null;
 
-  checkAdminStatus: () => Promise<void>;
-  reset: () => void;
+  fetchUser: (uid: string) => Promise<void>;
 }
 
-const useAuthStore = create<AuthStore>((set) => ({
-  isAdmin: false,
-  isLoading: false,
-  error: null,
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
 
-  checkAdminStatus: async () => {
-    set({ isLoading: true, error: null });
+  fetchUser: async (uid: string) => {
     try {
-      const response = await axiosInstance.get("/admin/check");
-      set({ isAdmin: response.data.admin });
+      const response = await axiosInstance.get(`/users/${uid}`);
+      const { user } = response.data;
+      set({ user });
     } catch (error) {
-      set({
-        isAdmin: false,
-        error:
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "Error in checking admin status",
-      });
-    } finally {
-      set({ isLoading: false });
+      console.log("Error in fetchArtistById: ", error);
     }
   },
-
-  reset: () => {
-    set({ isAdmin: false, isLoading: false, error: null });
-  },
 }));
-
-export default useAuthStore;
