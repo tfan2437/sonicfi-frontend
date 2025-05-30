@@ -16,13 +16,13 @@ import { useNavigate } from "react-router-dom";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 import { copyCurrentUrl } from "@/lib/utils";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 interface PlaylistMenuProps {
   playlistId: string;
   isMenuOpen: boolean;
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
-  handleDeletePlaylist: (playlistId: string) => void;
 }
 
 const PlaylistMenu = ({
@@ -30,9 +30,10 @@ const PlaylistMenu = ({
   isMenuOpen,
   setIsMenuOpen,
   setIsEditing,
-  handleDeletePlaylist,
 }: PlaylistMenuProps) => {
   const navigate = useNavigate();
+
+  const { deletePlaylist } = usePlayerStore();
 
   return (
     <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -71,7 +72,7 @@ const PlaylistMenu = ({
           }
           text="Delete"
           onClick={() => {
-            handleDeletePlaylist(playlistId);
+            deletePlaylist(playlistId);
           }}
           className="text-red-500"
         />

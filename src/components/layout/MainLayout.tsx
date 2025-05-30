@@ -7,6 +7,7 @@ import AudioPlayer from "@/components/playback/AudioPlayer";
 import TrackControl from "@/components/playback/TrackControl";
 import { useEffect } from "react";
 import Navbar from "@/components/nav/Navbar";
+import PlaylistDialog from "@/components/dialog/PlaylistDialog";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { useUserStore } from "@/stores/useAuthStore";
@@ -34,6 +35,7 @@ const MainLayout = () => {
       </div>
       <TrackControl />
       <AudioPlayer />
+      <PlaylistDialog />
     </div>
   );
 };

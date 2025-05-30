@@ -246,7 +246,7 @@ const TrackListItem = ({
         className="flex items-center gap-2"
       >
         <span>{formatDuration(track.duration)}</span>
-        <TrackMenu artists={track.artists} albumId={track.album._id} />
+        <TrackMenu track={track} />
       </div>
     </div>
   );

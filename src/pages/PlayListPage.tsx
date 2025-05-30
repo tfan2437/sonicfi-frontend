@@ -23,7 +23,7 @@ const PlayListPage = () => {
     isPlaying,
     playListId,
     playList,
-    setPlayList,
+    setPlaylist,
     setTracksAndCurrentTrack,
   } = usePlayerStore();
 
@@ -39,14 +39,14 @@ const PlayListPage = () => {
     const fetchPlayList = async (id: string) => {
       const response = await getPlayList(id);
       if (response) {
-        setPlayList(response);
+        setPlaylist(response);
       }
     };
 
     if (id) {
       fetchPlayList(id);
     }
-  }, [id, setPlayList]);
+  }, [id, setPlaylist]);
 
   if (!playList) return <ArtistSkeleton />;
 

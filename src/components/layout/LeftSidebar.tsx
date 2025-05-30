@@ -1,4 +1,4 @@
-import { ListIcon } from "lucide-react";
+import { ListIcon, PlusIcon } from "lucide-react";
 import PauseIcon from "@/components/icons/PauseIcon";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { PlaylistDisplayMode } from "@/types/index";
@@ -8,62 +8,34 @@ import { useUserStore } from "@/stores/useAuthStore";
 import { twMerge } from "tailwind-merge";
 // types
 import { ArtistCredit, Playlist, User } from "@/types/index";
-import {
-  createPlaylist,
-  getPlaylists,
-  deletePlaylist,
-  updatePlaylist,
-} from "@/api/playlist";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { createPlaylist } from "@/api/playlist";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PlayIcon from "@/components/icons/PlayIcon";
 import PlaylistMenu from "@/components/menu/PlaylistMenu";
-import CreatePlaylist from "@/components/menu/CreatePlaylist";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
 
+  const { playlists, fetchPlaylists } = usePlayerStore();
+
   const [isLoading, setIsLoading] = useState(false);
-  const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [displayMode, setDisplayMode] =
     useState<PlaylistDisplayMode>("playlists");
 
-  const fetchPlaylists = useCallback(async () => {
-    if (!user) return;
-    const playlists = await getPlaylists(user.uid);
-    setPlaylists(playlists);
-  }, [user]);
-
   useEffect(() => {
-    fetchPlaylists();
+    if (user && user.uid) {
+      fetchPlaylists(user.uid);
+    }
   }, [user, fetchPlaylists]);
 
-  const handleCreatePlaylist = async (name: string) => {
-    if (!user || isLoading) return;
+  const handleCreatePlaylist = async () => {
+    if (!user || !user.uid || isLoading) return;
     setIsLoading(true);
-    await createPlaylist(user.uid, name, []);
-    await fetchPlaylists();
+    await createPlaylist(user.uid, `My Playlist #${playlists.length + 1}`, []);
+    await fetchPlaylists(user.uid);
     setIsLoading(false);
-  };
-
-  const handleDeletePlaylist = async (playlistId: string) => {
-    if (!user || isLoading) return;
-    setIsLoading(true);
-    setPlaylists((prev) =>
-      prev.filter((playlist) => playlist._id !== playlistId)
-    );
-    await deletePlaylist(playlistId);
-    setIsLoading(false);
-  };
-
-  const handleRenamePlaylist = async (playlistId: string, name: string) => {
-    setPlaylists((prev) =>
-      prev.map((playlist) =>
-        playlist._id === playlistId ? { ...playlist, name } : playlist
-      )
-    );
-    await updatePlaylist({ _id: playlistId, name });
   };
 
   const displayAlbums = [
@@ -89,7 +61,16 @@ const LeftSidebar = () => {
       <div className="flex-1 rounded-lg bg-zinc-900 py-4">
         <div className="flex items-center justify-between px-4">
           <span className="font-semibold">Your Library</span>
-          <CreatePlaylist handleCreatePlaylist={handleCreatePlaylist} />
+          <div
+            onClick={() => handleCreatePlaylist()}
+            className="cursor-pointer flex items-center p-1 rounded-full bg-transparent hover:bg-zinc-700 transition-all duration-300 text-white"
+          >
+            {isLoading ? (
+              <div className="loader" />
+            ) : (
+              <PlusIcon className="size-5" />
+            )}
+          </div>
         </div>
         <div className="flex items-center justify-between my-2 px-4">
           <div className="flex items-center gap-2">
@@ -115,13 +96,7 @@ const LeftSidebar = () => {
         </div>
         <ScrollArea className="h-[calc(100vh-260px)] px-2">
           {displayMode === "playlists" && (
-            <Playlists
-              playlists={playlists}
-              user={user}
-              navigate={navigate}
-              handleRenamePlaylist={handleRenamePlaylist}
-              handleDeletePlaylist={handleDeletePlaylist}
-            />
+            <Playlists playlists={playlists} user={user} navigate={navigate} />
           )}
           {displayMode === "albums" && (
             <AlbumItem albums={displayAlbums} navigate={navigate} />
@@ -164,14 +139,10 @@ const Playlists = ({
   playlists,
   user,
   navigate,
-  handleRenamePlaylist,
-  handleDeletePlaylist,
 }: {
   playlists: Playlist[];
   user: User | null;
   navigate: (path: string) => void;
-  handleRenamePlaylist: (playlistId: string, name: string) => Promise<void>;
-  handleDeletePlaylist: (playlistId: string) => Promise<void>;
 }) => {
   return (
     <div className="flex flex-col w-[284px]">
@@ -181,8 +152,6 @@ const Playlists = ({
           playlist={playlist}
           user={user}
           navigate={navigate}
-          handleRenamePlaylist={handleRenamePlaylist}
-          handleDeletePlaylist={handleDeletePlaylist}
         />
       ))}
     </div>
@@ -193,21 +162,18 @@ const PlayListItem = ({
   playlist,
   user,
   navigate,
-  handleRenamePlaylist,
-  handleDeletePlaylist,
 }: {
   playlist: Playlist;
   user: User | null;
   navigate: (path: string) => void;
-  handleRenamePlaylist: (playlistId: string, name: string) => Promise<void>;
-  handleDeletePlaylist: (playlistId: string) => Promise<void>;
 }) => {
   const {
     playListId,
     isPlaying,
     togglePlay,
     setTracksAndCurrentTrack,
-    setPlayList,
+    setPlaylist,
+    renamePlaylist,
   } = usePlayerStore();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -218,7 +184,7 @@ const PlayListItem = ({
 
   const handleBlur = () => {
     setIsEditing(false);
-    handleRenamePlaylist(playlist._id, playlistName);
+    renamePlaylist(playlist._id, playlistName);
   };
 
   useEffect(() => {
@@ -238,7 +204,7 @@ const PlayListItem = ({
       key={playlist._id}
       className="group grid w-full grid-cols-[48px_1fr_24px] items-center hover:bg-zinc-800 gap-2 p-2 rounded cursor-pointer group"
       onClick={() => {
-        setPlayList(playlist);
+        setPlaylist(playlist);
         navigate(`/playlist/${playlist._id}`);
       }}
     >
@@ -323,7 +289,6 @@ const PlayListItem = ({
           setIsMenuOpen={setIsMenuOpen}
           playlistId={playlist._id}
           setIsEditing={setIsEditing}
-          handleDeletePlaylist={handleDeletePlaylist}
         />
       </div>
     </div>

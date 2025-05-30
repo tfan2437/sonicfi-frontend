@@ -17,17 +17,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import MenuItem from "@/components/menu/MenuItem";
 import { copyCurrentUrl } from "@/lib/utils";
-import { ArtistCredit } from "@/types";
+import { Track } from "@/types";
 import { useNavigate } from "react-router-dom";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
-const TrackMenu = ({
-  artists,
-  albumId,
-}: {
-  artists: ArtistCredit[];
-  albumId: string;
-}) => {
+import { useUserStore } from "@/stores/useAuthStore";
+import { createPlaylist } from "@/api/playlist";
+
+const TrackMenu = ({ track }: { track: Track }) => {
   const navigate = useNavigate();
+
+  const { playlists, addToPlaylist, fetchPlaylists } = usePlayerStore();
+
+  const { user } = useUserStore();
+
+  const handleCreatePlaylist = async () => {
+    if (!user || !user.uid) return;
+    await createPlaylist(user.uid, `My Playlist #${playlists.length + 1}`, []);
+    await fetchPlaylists(user.uid);
+  };
 
   return (
     <DropdownMenu>
@@ -46,26 +54,32 @@ const TrackMenu = ({
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent className="w-[200px] p-0">
-              {artists.map((artist) => (
+              {playlists.map((playlist) => (
                 <MenuItem
-                  key={artist._id}
-                  text={artist.name}
+                  key={playlist._id}
+                  text={playlist.name}
                   icon={
-                    <div className="flex items-center justify-center size-4">
+                    <div className="flex items-center justify-center size-5">
                       <img
-                        src={artist.profile_image.url}
-                        alt={artist.name}
-                        className="size-4 rounded-full"
+                        src={
+                          playlist.tracks?.[0]?.album?.image?.url ||
+                          "/logo/sonicfi_240x240.png"
+                        }
+                        alt={playlist.name}
+                        className="size-5"
                       />
                     </div>
                   }
                   onClick={() => {
-                    navigate(`/artist/${artist._id}`);
+                    addToPlaylist(playlist._id, track._id, track);
                   }}
                 />
               ))}
               <hr />
-              <MenuItem text="Create playlist" onClick={() => {}} />
+              <MenuItem
+                text="Create playlist"
+                onClick={() => handleCreatePlaylist()}
+              />
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
         </DropdownMenuSub>
@@ -78,16 +92,16 @@ const TrackMenu = ({
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent className="w-[200px] p-0">
-              {artists.map((artist) => (
+              {track.artists.map((artist) => (
                 <MenuItem
                   key={artist._id}
                   text={artist.name}
                   icon={
-                    <div className="flex items-center justify-center size-4">
+                    <div className="flex items-center justify-center size-5">
                       <img
                         src={artist.profile_image.url}
                         alt={artist.name}
-                        className="size-4 rounded-full"
+                        className="size-5 rounded-full"
                       />
                     </div>
                   }

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { Playlist, Track } from "@/types";
 
+import { getPlaylists, updatePlaylist, deletePlaylist } from "@/api/playlist";
+
 interface PlayerStore {
   currentTrack: Track | null;
   queuedTracks: Track[];
@@ -9,6 +11,9 @@ interface PlayerStore {
 
   playListId: string | null;
   playList: Playlist | null;
+
+  isLoading: boolean;
+  playlists: Playlist[];
 
   togglePlay: () => void;
   setCurrentTrack: (track: Track | null) => void;
@@ -21,7 +26,16 @@ interface PlayerStore {
   playTracks: (tracks: Track[], startIndex?: number) => void;
   playNext: () => void;
   playPrevious: () => void;
-  setPlayList: (playList: Playlist | null) => void;
+  setPlaylist: (playList: Playlist | null) => void;
+
+  fetchPlaylists: (uid: string) => Promise<void>;
+  renamePlaylist: (playlistId: string, name: string) => Promise<void>;
+  deletePlaylist: (playlistId: string) => Promise<void>;
+  addToPlaylist: (
+    playlistId: string,
+    trackId: string,
+    track: Track
+  ) => Promise<void>;
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -31,6 +45,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentIndex: -1,
   playListId: null,
   playList: null,
+  playlists: [],
+
+  isLoading: false,
 
   setCurrentTrack: (track: Track | null) => {
     if (!track) return;
@@ -137,7 +154,59 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     });
   },
 
-  setPlayList: (playList: Playlist | null) => {
+  setPlaylist: (playList: Playlist | null) => {
     set({ playList });
+  },
+
+  fetchPlaylists: async (uid: string) => {
+    if (!uid || get().isLoading) return;
+    set({ isLoading: true });
+    const playlists = await getPlaylists(uid);
+    set({ playlists, isLoading: false });
+  },
+
+  renamePlaylist: async (playlistId: string, name: string) => {
+    if (!playlistId) return;
+    set({
+      playlists: get().playlists.map((playlist) =>
+        playlist._id === playlistId ? { ...playlist, name } : playlist
+      ),
+      isLoading: false,
+    });
+    await updatePlaylist({ _id: playlistId, name });
+  },
+
+  deletePlaylist: async (playlistId: string) => {
+    if (!playlistId) return;
+    set({
+      playlists: get().playlists.filter(
+        (playlist) => playlist._id !== playlistId
+      ),
+    });
+    await deletePlaylist(playlistId);
+  },
+
+  addToPlaylist: async (playlistId: string, trackId: string, track: Track) => {
+    console.log("addToPlaylist", playlistId, trackId, track);
+    if (!playlistId || !trackId || !track) return;
+    const track_ids = [
+      ...(get().playlists.find((p) => p._id === playlistId)?.track_ids || []),
+      trackId,
+    ];
+    set({
+      playlists: get().playlists.map((playlist) =>
+        playlist._id === playlistId
+          ? {
+              ...playlist,
+              track_ids: track_ids,
+              tracks: [...playlist.tracks, track],
+            }
+          : playlist
+      ),
+    });
+    await updatePlaylist({
+      _id: playlistId,
+      track_ids: track_ids,
+    });
   },
 }));
