@@ -42,3 +42,7 @@ export const formatDate = (date: string) => {
 export const formatNumber = (number: number) => {
   return number.toLocaleString("en-US");
 };
+
+export const copyCurrentUrl = () => {
+  navigator.clipboard.writeText(window.location.href);
+};

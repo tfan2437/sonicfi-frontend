@@ -1,6 +1,6 @@
 import { Playlist, Track } from "@/types";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // utils
 import { formatDuration } from "@/lib/utils";
 // store
@@ -11,8 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
 import MusicAnimationIcon from "@/components/icons/MusicAnimationIcon";
-import ContextMenu from "@/components/ContextMenu";
-import { getPlayList } from "@/services/playlist";
+import { getPlayList } from "@/api/playlist";
 import { useUserStore } from "@/stores/useAuthStore";
 
 const PlayListPage = () => {
@@ -44,26 +43,24 @@ const PlayListPage = () => {
       }
     };
 
-    if (id && !playList) {
+    if (id) {
       fetchPlayList(id);
     }
-  }, [id, playList, setPlayList]);
+  }, [id, setPlayList]);
 
   if (!playList) return <ArtistSkeleton />;
 
   return (
-    <div className="h-full bg-zinc-900 select-none">
-      <ScrollArea className="h-full w-full">
+    <div className="h-screen rounded-lg select-none">
+      <ScrollArea className="h-screen bg-zinc-950 rounded-lg w-full">
         <div className="h-full w-full relative">
-          <AlbumColorGradient color={"#000000"} />
           <PlaylistInfo
             playList={playList}
             trackLength={playList.tracks.length}
             handlePlayPlaylist={handlePlayPlaylist}
             isPlaylistPlaying={isPlaying && playListId === id}
           />
-          {/* Table Section */}
-          <div className="bg-black/20 backdrop-blur-sm">
+          <div className="bg-zinc-950 backdrop-blur-sm h-full pb-40">
             <TableHeader />
             <div className="space-y-2 py-4 px-6">
               {playList.tracks.map((track, index) => (
@@ -76,6 +73,7 @@ const PlayListPage = () => {
                   handlePlayTrack={() => playTracks(playList.tracks, index)}
                 />
               ))}
+              {playList.tracks.length === 0 && <ExploreMore />}
             </div>
           </div>
         </div>
@@ -110,14 +108,25 @@ const PlaylistInfo = ({
   const { user } = useUserStore();
 
   return (
-    <div className="w-full flex items-end justify-between pr-4">
+    <div className="w-full flex items-end bg-zinc-900 justify-between pr-4">
       <div className="z-10 flex gap-6 p-6">
-        <img
-          src={playList.tracks[0].album.image.url}
-          alt={playList.name}
-          className="h-60 w-60 rounded shadow-lg"
-          draggable={false}
-        />
+        {playList.tracks.length > 0 ? (
+          <img
+            src={playList.tracks[0].album.image.url}
+            alt={playList.name}
+            className="h-60 w-60 rounded shadow-lg"
+            draggable={false}
+          />
+        ) : (
+          <div className="h-60 w-60 shrink-0 rounded shadow-lg bg-black flex items-center justify-center">
+            <img
+              src={"/logo/sonicfi_240x240.png"}
+              alt={playList.name}
+              className="h-24 w-24 rounded shadow-lg"
+              draggable={false}
+            />
+          </div>
+        )}
         <div className="flex flex-col w-full justify-end text-white">
           <p className="text-sm font-light">Playlist</p>
           <h1 className="text-8xl min-h-[104px] max-h-[208px] mt-1 font-extrabold line-clamp-2">
@@ -133,22 +142,24 @@ const PlaylistInfo = ({
         </div>
       </div>
 
-      <div className="z-10 flex items-center justify-between px-6 py-6">
-        <button
-          onClick={() =>
-            handlePlayPlaylist(playList.tracks[0], playList.tracks)
-          }
-          className="flex size-14 cursor-pointer items-center justify-center rounded-full bg-white/60 text-black transition-all duration-200 hover:scale-105 hover:bg-white"
-        >
-          {isPlaylistPlaying ? (
-            <div className="flex size-8 items-center justify-center">
-              <PauseIcon className="size-7" />
-            </div>
-          ) : (
-            <PlayIcon className="size-8" />
-          )}
-        </button>
-      </div>
+      {playList.tracks.length > 0 && (
+        <div className="z-10 flex items-center justify-between px-6 py-6">
+          <button
+            onClick={() =>
+              handlePlayPlaylist(playList.tracks[0], playList.tracks)
+            }
+            className="flex size-14 cursor-pointer items-center justify-center rounded-full bg-white/60 text-black transition-all duration-200 hover:scale-105 hover:bg-white"
+          >
+            {isPlaylistPlaying ? (
+              <div className="flex size-8 items-center justify-center">
+                <PauseIcon className="size-7" />
+              </div>
+            ) : (
+              <PlayIcon className="size-8" />
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -207,7 +218,28 @@ const TrackListItem = ({
 
       <div className="flex items-center gap-2">
         <span>{formatDuration(track.duration)}</span>
-        <ContextMenu />
+      </div>
+    </div>
+  );
+};
+
+const ExploreMore = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div
+      onClick={() => navigate("/")}
+      className="flex group cursor-pointer items-center justify-between rounded-md pl-3.5 pr-6 py-2 text-sm text-zinc-400"
+    >
+      <div className="flex items-center gap-4">
+        <div className="flex items-center justify-center size-6">
+          <MusicAnimationIcon />
+        </div>
+        <div className="flex h-10 items-center gap-3">
+          <span className="font-medium text-lg text-white group-hover:underline">
+            Explore More
+          </span>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { Album, Track } from "@/types";
 import { useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 // utils
 import { formatDuration } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
@@ -15,7 +15,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
 import MusicAnimationIcon from "@/components/icons/MusicAnimationIcon";
 import AlbumsSection from "@/components/section/AlbumsSection";
-import ContextMenu from "@/components/ContextMenu";
+import TrackMenu from "@/components/menu/TrackMenu";
 
 const AlbumPage = () => {
   const { id } = useParams();
@@ -215,6 +215,8 @@ const TrackListItem = ({
   isCurrentTrack: boolean;
   handlePlayTrack: () => void;
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       onClick={handlePlayTrack}
@@ -239,10 +241,12 @@ const TrackListItem = ({
           </div>
         </div>
       </div>
-
-      <div className="flex items-center gap-2">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex items-center gap-2"
+      >
         <span>{formatDuration(track.duration)}</span>
-        <ContextMenu />
+        <TrackMenu artists={track.artists} albumId={track.album._id} />
       </div>
     </div>
   );

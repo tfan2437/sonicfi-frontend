@@ -16,10 +16,18 @@ import {
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
 import MenuItem from "@/components/menu/MenuItem";
+import { copyCurrentUrl } from "@/lib/utils";
+import { ArtistCredit } from "@/types";
+import { useNavigate } from "react-router-dom";
 
-const TrackMenu = () => {
-  const artists = ["Artist 1", "Artist 2", "Artist 3"];
-  const playlists = ["Playlist 1", "Playlist 2", "Playlist 3"];
+const TrackMenu = ({
+  artists,
+  albumId,
+}: {
+  artists: ArtistCredit[];
+  albumId: string;
+}) => {
+  const navigate = useNavigate();
 
   return (
     <DropdownMenu>
@@ -28,7 +36,7 @@ const TrackMenu = () => {
           <EllipsisIcon className="size-4" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" side="top" className="w-[220px] p-0">
+      <DropdownMenuContent align="end" side="top" className="w-[220px] p-0">
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className="cursor-pointer py-3 pl-4 pr-3">
             <div className="flex items-center gap-4">
@@ -38,8 +46,23 @@ const TrackMenu = () => {
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent className="w-[200px] p-0">
-              {playlists.map((playlist) => (
-                <MenuItem key={playlist} text={playlist} onClick={() => {}} />
+              {artists.map((artist) => (
+                <MenuItem
+                  key={artist._id}
+                  text={artist.name}
+                  icon={
+                    <div className="flex items-center justify-center size-4">
+                      <img
+                        src={artist.profile_image.url}
+                        alt={artist.name}
+                        className="size-4 rounded-full"
+                      />
+                    </div>
+                  }
+                  onClick={() => {
+                    navigate(`/artist/${artist._id}`);
+                  }}
+                />
               ))}
               <hr />
               <MenuItem text="Create playlist" onClick={() => {}} />
@@ -56,7 +79,22 @@ const TrackMenu = () => {
           <DropdownMenuPortal>
             <DropdownMenuSubContent className="w-[200px] p-0">
               {artists.map((artist) => (
-                <MenuItem key={artist} text={artist} onClick={() => {}} />
+                <MenuItem
+                  key={artist._id}
+                  text={artist.name}
+                  icon={
+                    <div className="flex items-center justify-center size-4">
+                      <img
+                        src={artist.profile_image.url}
+                        alt={artist.name}
+                        className="size-4 rounded-full"
+                      />
+                    </div>
+                  }
+                  onClick={() => {
+                    navigate(`/artist/${artist._id}`);
+                  }}
+                />
               ))}
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
@@ -69,7 +107,7 @@ const TrackMenu = () => {
         <MenuItem
           icon={<SquareArrowOutUpRightIcon className="size-4" />}
           text="Share"
-          onClick={() => {}}
+          onClick={copyCurrentUrl}
         />
       </DropdownMenuContent>
     </DropdownMenu>

@@ -116,3 +116,5 @@ export interface Playlist {
   track_ids: string[];
   tracks: Track[];
 }
+
+export type PlaylistDisplayMode = "playlists" | "albums" | "artists";
