@@ -10,7 +10,7 @@ const MenuItem = ({
   icon?: React.ReactNode;
   text: string;
   className?: string;
-  onClick: () => void;
+  onClick: () => void | Promise<void>;
 }) => {
   return (
     <DropdownMenuItem className="cursor-pointer py-3 pl-4 pr-6">

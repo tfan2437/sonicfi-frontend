@@ -95,6 +95,7 @@ const LeftSidebar = () => {
           </button>
         </div>
         <ScrollArea className="h-[calc(100vh-260px)] px-2">
+          {!user && <NoAuthItem navigate={navigate} />}
           {displayMode === "playlists" && (
             <Playlists playlists={playlists} user={user} navigate={navigate} />
           )}
@@ -381,6 +382,49 @@ const ArtistItem = ({
           </div>
         </div>
       ))}
+    </div>
+  );
+};
+
+const NoAuthItem = ({ navigate }: { navigate: (path: string) => void }) => {
+  const handleGetStarted = () => {
+    navigate(`/login`);
+  };
+
+  return (
+    <div className="flex flex-col w-full px-2 gap-3">
+      <div className="w-full flex flex-col gap-2 p-2 rounded-lg bg-zinc-700">
+        <div className="flex flex-col gap-1 pr-2 text-sm px-1 py-1">
+          <span className="text-white font-semibold">
+            Create your first playlist
+          </span>
+          <span className="text-zinc-300 font-light">
+            It's easy. We'll help.
+          </span>
+          <button
+            onClick={handleGetStarted}
+            className="w-full py-1.5 text-black bg-white rounded-full mt-2 hover:scale-103 hover:bg-white/80 transition-all duration-200"
+          >
+            <span className="font-semibold text-sm ">Create playlist</span>
+          </button>
+        </div>
+      </div>
+      <div className="w-full flex flex-col gap-2 p-2 rounded-lg bg-zinc-700">
+        <div className="flex flex-col gap-1 pr-2 text-sm px-1 py-1">
+          <span className="text-white font-semibold">
+            Unlock the full power of Sonicfi
+          </span>
+          <span className="text-zinc-300 font-light">
+            The music platform redefining how you create and connect
+          </span>
+          <button
+            onClick={handleGetStarted}
+            className="w-full py-1.5 text-black bg-white rounded-full mt-2 hover:scale-103 hover:bg-white/80 transition-all duration-200"
+          >
+            <span className="font-semibold text-sm">Get started</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

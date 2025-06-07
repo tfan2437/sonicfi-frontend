@@ -82,7 +82,7 @@ const AuthBox = () => {
             <label
               htmlFor="username"
               className={twMerge(
-                "text-sm absolute -top-3 left-5 bg-white px-2",
+                "text-sm absolute -top-3 left-5 px-2",
                 focused === "username" ? "text-blue-500" : "text-neutral-400"
               )}
             >
@@ -106,8 +106,8 @@ const AuthBox = () => {
           <label
             htmlFor="email"
             className={twMerge(
-              "text-sm absolute -top-3 left-5 bg-white px-2",
-              focused === "email" ? "text-blue-500" : "text-neutral-400"
+              "text-sm absolute -top-5 left-5 px-2",
+              focused === "email" ? "text-blue-400" : "text-neutral-400"
             )}
           >
             Email
@@ -121,7 +121,7 @@ const AuthBox = () => {
             id="email"
             onFocus={() => setFocused("email")}
             onBlur={() => setFocused("")}
-            className="w-full px-4 py-2 rounded-full border-1 border-neutral-300 text-black focus:outline-none focus:border-blue-500 placeholder:text-neutral-300 placeholder:font-light"
+            className="w-full px-4 py-2 bg-zinc-800 rounded-lg border-1 border-neutral-300 text-black focus:outline-none focus:border-blue-400 placeholder:text-neutral-300 placeholder:font-light"
             placeholder={mode === "signin" ? "test@gmail.com" : ""}
             required
           />

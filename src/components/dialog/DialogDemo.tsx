@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-const PlaylistDialog = () => {
+const DialogDemo = () => {
   return (
     <Dialog open={false}>
       <DialogTrigger asChild>
@@ -31,4 +31,4 @@ const PlaylistDialog = () => {
     </Dialog>
   );
 };
-export default PlaylistDialog;
+export default DialogDemo;

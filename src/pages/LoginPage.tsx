@@ -26,10 +26,14 @@ const LoginPage = () => {
 
   return (
     <div className="flex flex-row w-full h-screen bg-black">
-      <div className="w-full md:w-1/2 h-full bg-white flex flex-col">
+      <div className="flex-1 h-full bg-white flex flex-col">
         <LoginHeader />
         <LoginBody />
         <LoginFooter />
+      </div>
+
+      <div className="w-[800px] h-full p-4 flex flex-col">
+        <div className="w-full h-full bg-blue-500/10 rounded-lg px-4 flex flex-col"></div>
       </div>
     </div>
   );
