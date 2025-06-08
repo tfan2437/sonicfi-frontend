@@ -8,14 +8,21 @@ import MenuItem from "./MenuItem";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUserStore } from "@/stores/useAuthStore";
 import { signOut } from "@/services/firebase";
+import { useNavigate } from "react-router-dom";
 
 const UserMenu = () => {
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     console.log("signing out");
-    await signOut();
-    window.location.reload();
+    try {
+      await signOut();
+      setUser(null); // Clear user state
+      navigate("/login"); // Navigate to login page
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   return (
