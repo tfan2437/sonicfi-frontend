@@ -1,6 +1,6 @@
 import { Album, Track } from "@/types";
 import { useEffect, useState, useRef } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 // utils
 import { formatDuration } from "@/lib/utils";
 import { formatDate } from "@/lib/utils";
@@ -27,9 +27,7 @@ const AlbumPage = () => {
   const [album, setAlbum] = useState<Album | null>(null);
   const [tracks, setTracks] = useState<Track[] | null>(null);
 
-  const isAlbumPlaying = album?.track_ids.some(
-    (id) => id === currentTrack?._id
-  );
+  const isAlbumPlaying = album?.tracks.some((id) => id === currentTrack?._id);
 
   const handlePlayAlbum = (tracks: Track[]) => {
     if (isAlbumPlaying) {
@@ -69,7 +67,7 @@ const AlbumPage = () => {
     }
   }, [id]);
 
-  if (!album || !tracks || !artistAlbums) return <AlbumSkeleton />;
+  if (!album || !tracks) return <AlbumSkeleton />;
 
   return (
     <div className="h-full bg-zinc-900 select-none">
@@ -103,12 +101,15 @@ const AlbumPage = () => {
               copyright={album.copyright}
             />
           </div>
-          <div className="w-full mt-20 pb-6">
-            <AlbumsSection
-              title={`More by ${album.artists[0].name}`}
-              albums={artistAlbums.filter((a) => a._id !== album._id)}
-            />
-          </div>
+          {artistAlbums && artistAlbums.length > 0 && (
+            <div className="w-full mt-14 pb-6">
+              <AlbumsSection
+                title={`More by ${album.artists[0].name}`}
+                albums={artistAlbums.filter((a) => a._id !== album._id)}
+                displayMode="albums"
+              />
+            </div>
+          )}
         </div>
       </ScrollArea>
     </div>
@@ -153,7 +154,7 @@ const AlbumInfo = ({
           <p className="text-sm font-light">
             {album.type[0].toUpperCase() + album.type.slice(1)}
           </p>
-          <h1 className="text-8xl min-h-[104px] max-h-[208px] mt-1 font-extrabold line-clamp-2">
+          <h1 className="text-4xl xl:text-8xl min-h-[104px] max-h-[208px] mt-1 font-extrabold line-clamp-2">
             {album.name}
           </h1>
           <div className="flex items-center gap-1 text-sm font-light text-white/50">
@@ -215,8 +216,6 @@ const TrackListItem = ({
   isCurrentTrack: boolean;
   handlePlayTrack: () => void;
 }) => {
-  const navigate = useNavigate();
-
   return (
     <div
       onClick={handlePlayTrack}
@@ -260,7 +259,7 @@ const AlbumCopyright = ({
   copyright: string;
 }) => {
   return (
-    <div className="flex w-full items-center justify-between px-9 mt-4">
+    <div className="flex w-full items-center justify-between px-9 mt-4 pb-6">
       <div className="flex flex-col font-light text-[11px] text-zinc-400">
         <span className="text-sm mb-1">{formatDate(releaseDate)}</span>
         <span>{copyright}</span>

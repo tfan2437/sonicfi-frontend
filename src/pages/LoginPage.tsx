@@ -25,15 +25,11 @@ const LoginPage = () => {
   }, [navigate, fetchUser]);
 
   return (
-    <div className="flex flex-row w-full h-screen bg-black">
-      <div className="flex-1 h-full bg-white flex flex-col">
+    <div className="flex flex-row w-full h-screen bg-gradient-to-b from-black to-[#0000bb]">
+      <div className="flex-1 h-full flex flex-col">
         <LoginHeader />
         <LoginBody />
         <LoginFooter />
-      </div>
-
-      <div className="w-[800px] h-full p-4 flex flex-col">
-        <div className="w-full h-full bg-blue-500/10 rounded-lg px-4 flex flex-col"></div>
       </div>
     </div>
   );

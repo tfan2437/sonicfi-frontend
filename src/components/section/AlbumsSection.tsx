@@ -1,4 +1,4 @@
-import { Album } from "@/types";
+import { Album, HomeDisplayMode } from "@/types";
 import SectionGridSkeleton from "@/components/skeletons/SectionGridSkeleton";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -6,12 +6,14 @@ import { useState } from "react";
 interface AlbumsSectionProps {
   title: string;
   albums: Album[];
+  displayMode: HomeDisplayMode;
 }
 
-const AlbumsSection = ({ albums, title }: AlbumsSectionProps) => {
+const AlbumsSection = ({ albums, title, displayMode }: AlbumsSectionProps) => {
   const navigate = useNavigate();
   const [showAll, setShowAll] = useState<boolean>(false);
 
+  if (displayMode !== "albums" && displayMode !== "all") return null;
   if (!albums) return <SectionGridSkeleton />;
 
   return (
@@ -26,8 +28,8 @@ const AlbumsSection = ({ albums, title }: AlbumsSectionProps) => {
         </button>
       </div>
       {/* TODO: add a button to show all albums */}
-      <div className="grid grid-cols-7">
-        {(showAll ? albums : albums.slice(0, 7)).map((album) => (
+      <div className="responsive-grid">
+        {(showAll ? albums : albums.slice(0, 8)).map((album) => (
           <div
             key={album._id}
             onClick={() => navigate(`/album/${album._id}`)}

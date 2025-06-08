@@ -54,7 +54,7 @@ const ArtistPage = () => {
           <ArtistInfo artist={artist} />
           <div className="bg-black/60 backdrop-blur-lg">
             <TableHeader />
-            <div className="grid grid-cols-[2fr_1fr]">
+            <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr]">
               <div className="space-y-2 py-4 px-6">
                 {tracks.map((track, index) => {
                   if (!showMoreTracks && index > 9) return null;
@@ -83,7 +83,11 @@ const ArtistPage = () => {
                 {showMoreTracks ? "Show Less" : "Show More"}
               </button>
             </div>
-            <AlbumsSection title={"Discography"} albums={albums} />
+            <AlbumsSection
+              title={"Discography"}
+              albums={albums}
+              displayMode="albums"
+            />
             <div className="px-7 mt-32 pb-4">
               <BiographySection
                 artist={artist}
@@ -142,9 +146,9 @@ const ArtistInfo = ({ artist }: { artist: Artist }) => {
 
 const TableHeader = () => {
   return (
-    <div className="grid grid-cols-[2fr_1fr] px-6 pt-6 text-xl font-semibold text-white">
+    <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] px-6 pt-6 text-xl font-semibold text-white">
       <span className="pl-4">Popular</span>
-      <span className="pl-2">Artist Pick</span>
+      <span className="pl-2 hidden xl:block">Artist Pick</span>
     </div>
   );
 };
@@ -157,7 +161,7 @@ const ArtistPick = ({
   artistImage: string;
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full hidden xl:block">
       <Link to={`/album/${album._id}`}>
         <div className="flex gap-4 pt-4">
           <img
@@ -222,7 +226,7 @@ const TrackListItem = ({
           alt={track.name}
           className="w-10 h-10 rounded-[3px]"
         />
-        <div className="font-medium text-white">{track.name}</div>
+        <div className="font-medium text-white line-clamp-1">{track.name}</div>
       </div>
 
       <div className="w-full flex items-center justify-end">

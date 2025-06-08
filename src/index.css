@@ -9,7 +9,7 @@
   --font-poppins: "Poppins", sans-serif;
   --font-montserrat: "Montserrat", sans-serif;
   --color-blue-400: #3333ff;
-  --color-blue-500: #0000ff;
+  --color-blue-500: #0000ee;
 }
 
 @theme inline {
@@ -119,6 +119,10 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+.responsive-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-8;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50 font-inter;
@@ -142,7 +146,7 @@
 }
 .bars__item {
   animation: play 1s ease-out infinite;
-  background-image: linear-gradient(to top, #0000ff, #0000ff);
+  background-image: linear-gradient(to top, #0000ee, #0000ee);
   height: 100%;
   width: 0.5rem;
 }

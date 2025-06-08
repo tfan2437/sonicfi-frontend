@@ -4,12 +4,14 @@ import { axiosInstance } from "@/lib/axios";
 
 interface UserStore {
   user: User | null;
-
+  setUser: (user: User) => void;
   fetchUser: (uid: string) => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
+
+  setUser: (user: User) => set({ user }),
 
   fetchUser: async (uid: string) => {
     try {

@@ -1,28 +1,24 @@
-import { Artist } from "@/types";
-import SectionGridSkeleton from "@/components/skeletons/SectionGridSkeleton";
+import { HomeDisplayMode } from "@/types";
 import { useNavigate } from "react-router-dom";
+import { DISPLAY_ARTISTS } from "@/constants";
 
 interface ArtistsSectionProps {
-  title: string;
-  artists: Artist[];
+  displayMode: HomeDisplayMode;
 }
 
-const ArtistsSection = ({ title, artists }: ArtistsSectionProps) => {
+const ArtistsSection = ({ displayMode }: ArtistsSectionProps) => {
   const navigate = useNavigate();
 
-  if (!artists) return <SectionGridSkeleton />;
+  if (displayMode !== "artists" && displayMode !== "all") return null;
 
   return (
     <div className="px-7">
       <div className="mb-1 flex items-end justify-between px-3">
-        <h2 className="font-montserrat text-2xl font-semibold">{title}</h2>
-        <button className="cursor-pointer text-sm text-zinc-400 hover:text-zinc-100 hover:underline">
-          Show all
-        </button>
+        <h2 className="font-montserrat text-2xl font-semibold">Artists</h2>
       </div>
 
-      <div className="grid grid-cols-7">
-        {artists.map((artist) => (
+      <div className="responsive-grid">
+        {DISPLAY_ARTISTS.map((artist) => (
           <div
             key={artist._id}
             onClick={() => navigate(`/artist/${artist._id}`)}

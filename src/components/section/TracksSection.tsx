@@ -1,4 +1,4 @@
-import { Track } from "@/types";
+import { HomeDisplayMode, Track } from "@/types";
 import SectionGridSkeleton from "@/components/skeletons/SectionGridSkeleton";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useState } from "react";
@@ -7,9 +7,10 @@ import TrackCard from "@/components/item/TrackCard";
 interface TracksSectionProps {
   title: string;
   tracks: Track[];
+  displayMode: HomeDisplayMode;
 }
 
-const TracksSection = ({ tracks, title }: TracksSectionProps) => {
+const TracksSection = ({ tracks, title, displayMode }: TracksSectionProps) => {
   const { currentTrack, togglePlay, setTracksAndCurrentTrack } =
     usePlayerStore();
 
@@ -22,6 +23,8 @@ const TracksSection = ({ tracks, title }: TracksSectionProps) => {
       setTracksAndCurrentTrack(track, tracks);
     }
   };
+
+  if (displayMode !== "tracks" && displayMode !== "all") return null;
 
   if (!tracks) return <SectionGridSkeleton />;
 
@@ -37,8 +40,8 @@ const TracksSection = ({ tracks, title }: TracksSectionProps) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-7">
-        {(showAll ? tracks : tracks.slice(0, 7)).map((track) => (
+      <div className="responsive-grid">
+        {(showAll ? tracks : tracks.slice(0, 8)).map((track) => (
           <TrackCard
             key={track._id}
             track={track}

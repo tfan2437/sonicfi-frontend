@@ -5,12 +5,22 @@ import { SearchIcon } from "lucide-react";
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<
+    {
+      id: string;
+      title: string;
+      description: string;
+    }[]
+  >([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      const filteredResults = [];
+      const filteredResults: {
+        id: string;
+        title: string;
+        description: string;
+      }[] = [];
       setResults(filteredResults);
       setShowResults(true);
     } else {

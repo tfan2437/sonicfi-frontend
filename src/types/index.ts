@@ -10,14 +10,10 @@ export interface Album {
   };
   color: string;
   release_date: string;
-  track_ids: string[];
-  total_tracks: number;
+  tracks: string[];
   popularity: number;
   label: string;
   copyright: string;
-  // date
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface Track {
@@ -70,14 +66,12 @@ export interface Artist {
     height: number;
   }[];
   albums: string[];
+  top_tracks: string[];
   external_links: {
     name: string;
     url: string;
   }[];
   biography: string;
-  // date
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface ArtistCredit {
@@ -118,3 +112,4 @@ export interface Playlist {
 }
 
 export type PlaylistDisplayMode = "playlists" | "albums" | "artists";
+export type HomeDisplayMode = "all" | "albums" | "artists" | "tracks";

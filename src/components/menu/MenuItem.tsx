@@ -13,11 +13,11 @@ const MenuItem = ({
   onClick: () => void | Promise<void>;
 }) => {
   return (
-    <DropdownMenuItem className="cursor-pointer py-3 pl-4 pr-6">
-      <div
-        className={twMerge("flex items-center gap-4", className)}
-        onClick={onClick}
-      >
+    <DropdownMenuItem
+      onClick={onClick}
+      className="cursor-pointer py-3 pl-4 pr-6"
+    >
+      <div className={twMerge("flex items-center gap-4", className)}>
         {icon}
         <span className="text-sm">{text}</span>
       </div>

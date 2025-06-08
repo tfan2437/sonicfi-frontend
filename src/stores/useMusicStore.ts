@@ -26,7 +26,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
   // actions
   fetchAlbumById: async (id: string) => {
     try {
-      const response = await axiosInstance.get(`/album/${id}`);
+      const response = await axiosInstance.get(`/albums/${id}`);
       const { album, tracks } = response.data;
       set({ album, tracks });
       return { album, tracks };
@@ -38,7 +38,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
   fetchArtistById: async (id: string) => {
     try {
-      const response = await axiosInstance.get(`/artist/${id}`);
+      const response = await axiosInstance.get(`/artists/${id}`);
       const { artist, albums, tracks } = response.data;
       set({ artist, albums, tracks });
       return { artist, albums, tracks };

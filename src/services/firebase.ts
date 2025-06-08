@@ -10,6 +10,8 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
+import { AxiosError } from "axios";
+import { User as UserType } from "@/types";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -24,12 +26,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const defaultPhotoURL = "";
 
 const signUp = async (
   name: string,
   email: string,
   password: string
-): Promise<void> => {
+): Promise<UserType> => {
   try {
     const response = await createUserWithEmailAndPassword(
       auth,
@@ -38,18 +41,15 @@ const signUp = async (
     );
     const user = response.user;
 
-    const defaultPhotoURL =
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Solid_black.svg/1024px-Solid_black.svg.png";
-
     // Update displayName in the Firebase Auth user profile
     await updateProfile(user, {
       displayName: name,
       photoURL: defaultPhotoURL,
     });
 
-    await createUser({
+    return await createUser({
       uid: user.uid,
-      username: name,
+      username: name || "Sonicfi User",
       email: email,
       photoURL: user.photoURL || defaultPhotoURL,
     });
@@ -84,7 +84,7 @@ const login = async (email: string, password: string): Promise<void> => {
   }
 };
 
-const loginWithGoogle = async (): Promise<boolean> => {
+const loginWithGoogle = async (): Promise<UserType> => {
   let user: User | null = null;
   try {
     const respose = await signInWithPopup(auth, provider);
@@ -111,9 +111,9 @@ const loginWithGoogle = async (): Promise<boolean> => {
 
   return await createUser({
     uid: user.uid,
-    username: user.displayName || "",
+    username: user.displayName || "Sonicfi User",
     email: user.email || "",
-    photoURL: user.photoURL || "",
+    photoURL: user.photoURL || defaultPhotoURL,
   });
 };
 
@@ -131,7 +131,7 @@ const createUser = async ({
   username: string;
   email: string;
   photoURL: string;
-}): Promise<boolean> => {
+}): Promise<UserType> => {
   try {
     const { data } = await axiosInstance.post(`/users/${uid}`, {
       username,
@@ -139,14 +139,19 @@ const createUser = async ({
       image_url: photoURL,
     });
 
-    if (!data.success) {
-      throw new Error("Failed to create user");
+    if (!data.user) {
+      throw new Error(
+        "Failed to create user: " + (data.message || "Unknown error")
+      );
     }
-    return true;
+    return data.user;
   } catch (error) {
-    console.error(error);
-    return false;
+    console.error("Error creating user:", error);
+    if (error instanceof AxiosError && error.response) {
+      console.error("Server response:", error.response.data);
+    }
+    throw error;
   }
 };
 
-export { auth, signUp, login, loginWithGoogle, signOut };
+export { auth, signUp, login, loginWithGoogle, signOut, createUser };
